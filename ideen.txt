@@ -1,8 +1,12 @@
+Generell:
+- Laufzeit: 1 Woche (7:30 - 19:00; 6 Tage/Woche; 4140 minuten)
+- Prozessorientiert
+
+* Im Supermarkt fragen: wieviel Stundenlohn + Betriebskosten pro Kassa, oder einen Wert festlegen =D
+
 Kassa:
 - Kassierer haben eine unterschiedliche Anzahl an Artikel die sie pro Minute bearbeiten können
 - Es besteht eine kleine Wahrscheinlichkeit, dass ein Artikel eingetippt werden muss, weil der Strichcode nicht funktioniert
-
-* Wert für Kosten festlegen
 
 Kunden:
 - Zeitabhängig kaufen Kunden mehr oder weniger Artikel (zb. Mittagspause weniger; Studenten, Schüler, usw.)
@@ -13,4 +17,4 @@ Warteschlangen:
 
 Kassa öffnet:
 - Dauert etwas, bis die Kassa besetzt ist
-- Kunden am Ende der Warteschlange wechseln womöglich die Warteschlange.
+- Kunden am Ende der Warteschlange wechseln womöglich die Warteschlange
