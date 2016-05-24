@@ -13,4 +13,4 @@ Warteschlangen:
 
 Kassa öffnet:
 - Dauert etwas, bis die Kassa besetzt ist
-- Kunden am Ende der Warteschlange wechseln womöglich die Warteschlange
+- Kunden am Ende der Warteschlange wechseln womöglich die Warteschlange.
