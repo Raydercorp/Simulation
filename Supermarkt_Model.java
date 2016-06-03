@@ -30,10 +30,7 @@ public class Supermarkt_Model extends Model
 	   return kundenAnkunftsZeit.sample();
     }
 
-	protected ProcessQueue<SimProcess> kassenWarteschlange1;
-	protected ProcessQueue<SimProcess> kassenWarteschlange2;
-	protected ProcessQueue<SimProcess> kassenWarteschlange3;
-	protected ProcessQueue<SimProcess> kassenWarteschlange4;
+	protected ProcessQueue<SimProcess>[] kassenWarteschlange;
 	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
@@ -65,11 +62,12 @@ public class Supermarkt_Model extends Model
 		kundenAnkunftsZeit.setNonNegative(true);
 		
 		kassenAnzahl = 4;
+		kassenWarteschlange = new ProcessQueue<SimProcess>[kassenAnzahl];
 
-		kassenWarteschlange1 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 1", true, true);
-		kassenWarteschlange2 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 2", true, true);
-		kassenWarteschlange3 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 3", true, true);
-		kassenWarteschlange4 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 4", true, true);
+		for(int i = 0; i < kassenAnzahl; i++)
+		{
+			kassenWarteschlange[i] = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange " + (i + 1), true, true);
+		}
 	}
 	
 	public static void main(String[] args)
