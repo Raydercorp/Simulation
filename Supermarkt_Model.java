@@ -62,7 +62,7 @@ public class Supermarkt_Model extends Model
 		kundenAnkunftsZeit.setNonNegative(true);
 		
 		kassenAnzahl = 4;
-		kassenWarteschlange = new ProcessQueue<SimProcess>[kassenAnzahl];
+		kassenWarteschlange = new ProcessQueue[kassenAnzahl];
 
 		for(int i = 0; i < kassenAnzahl; i++)
 		{

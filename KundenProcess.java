@@ -23,9 +23,9 @@ public class KundenProcess extends SimProcess {
     public void lifeCycle() throws SuspendExecution{
 
         // Kunde betritt Schalterraum -> in die Warteschlange geben
-        meinModel.kassenWarteschlange1.insert(this);
+        meinModel.kassenWarteschlange[0].insert(this);
         sendTraceNote("Laenge der Kundenreihe: " + 
-            meinModel.kassenWarteschlange1.length());
+            meinModel.kassenWarteschlange[0].length());
 
         // Schalter frei? 
         /*if (!meinModel.freieSchalterQueue.isEmpty()) {
