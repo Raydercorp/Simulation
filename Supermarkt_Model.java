@@ -1,27 +1,39 @@
+import desmoj.core.dist.ContDistExponential;
 import desmoj.core.simulator.Experiment;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.ProcessQueue;
 import desmoj.core.simulator.SimProcess;
 import desmoj.core.simulator.TimeInstant;
+import desmoj.core.simulator.TimeSpan;
 
 /*
 Ein Supermarkt hat n Kassen.
-Zu Beginn wird eine Kasse geöffnet und dann nach folgender Strategie vorgegangen:
+Zu Beginn wird eine Kasse geÃ¶ffnet und dann nach folgender Strategie vorgegangen:
 jedes Mal wenn w Kunden bei einer Kasse warten,
-wird eine neue Kasse eröffnet (solange möglich).
+wird eine neue Kasse erÃ¶ffnet (solange mÃ¶glich).
 Eine Kasse wird geschlossen, wenn m Minuten kein Kunde bedient wird
 (mindestens eine Kasse muss jedoch offen bleiben).
-
-Ziel der Simulation: wie sieht eine möglichst "optimale" Wahl der Parameter w und m aus,
-sodass die Kunden nicht zu lange warten müssen,
-aber auch die Kosten für besetzte Kassen nicht zu hoch werden.
+Ziel der Simulation: wie sieht eine mÃ¶glichst "optimale" Wahl der Parameter w und m aus,
+sodass die Kunden nicht zu lange warten mÃ¼ssen,
+aber auch die Kosten fÃ¼r besetzte Kassen nicht zu hoch werden.
  */
 
 public class Supermarkt_Model extends Model
 {
 	private int kassenAnzahl;
 	
-	protected ProcessQueue<SimProcess> kassenWarteschlange;
+	// Zufallszahlengenerator fuer Kundenankuenfte
+	private ContDistExponential kundenAnkunftsZeit;
+
+    // liefert eine Zufallszahl fuer Kundenankunftszeit
+    public double getKundenAnkunftsZeit() {
+	   return kundenAnkunftsZeit.sample();
+    }
+
+	protected ProcessQueue<SimProcess> kassenWarteschlange1;
+	protected ProcessQueue<SimProcess> kassenWarteschlange2;
+	protected ProcessQueue<SimProcess> kassenWarteschlange3;
+	protected ProcessQueue<SimProcess> kassenWarteschlange4;
 	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
@@ -32,22 +44,32 @@ public class Supermarkt_Model extends Model
 	public String description()
 	{
 		return "Ein Supermarkt hat n Kassen." +
-			   "Zu Beginn wird eine Kasse geöffnet und dann nach folgender Strategie vorgegangen:" +
+			   "Zu Beginn wird eine Kasse geÃ¶ffnet und dann nach folgender Strategie vorgegangen:" +
 			   "jedes Mal wenn w Kunden bei einer Kasse warten," +
-			   "wird eine neue Kasse eröffnet (solange möglich)." +
+			   "wird eine neue Kasse erÃ¶ffnet (solange mÃ¶glich)." +
 			   "Eine Kasse wird geschlossen, wenn m Minuten kein Kunde bedient wird" +
 			   "(mindestens eine Kasse muss jedoch offen bleiben).";
 	}
 
-	public void doInitialSchedules()
-	{
-		
-	}
+    public void doInitialSchedules()
+    {
+        // Prozess zur Erzeugung von Kunden einrichten
+        NeuerKundeProcess neuerKunde = new NeuerKundeProcess(this, "Kundenkreation", true);
+        // Prozess starten
+        neuerKunde.activate(new TimeSpan(0.0));
+    }
 
 	public void init()
 	{
+		kundenAnkunftsZeit = new ContDistExponential(this, "Ankunftszeitintervall", 3.0, true, true);	
+		kundenAnkunftsZeit.setNonNegative(true);
+		
 		kassenAnzahl = 4;
-		kassenWarteschlange = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange", true, true);
+
+		kassenWarteschlange1 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 1", true, true);
+		kassenWarteschlange2 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 2", true, true);
+		kassenWarteschlange3 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 3", true, true);
+		kassenWarteschlange4 = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange 4", true, true);
 	}
 	
 	public static void main(String[] args)
@@ -59,7 +81,7 @@ public class Supermarkt_Model extends Model
 		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
-		supermarktExperiment.stop(new TimeInstant(570)); //8:00 - 17:30
+		supermarktExperiment.stop(new TimeInstant(4140)); //7:00-18:30 * 6
 		supermarktExperiment.start();
 		supermarktExperiment.report();
 		supermarktExperiment.finish();
