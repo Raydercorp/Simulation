@@ -20,17 +20,33 @@ aber auch die Kosten fÃ¼r besetzte Kassen nicht zu hoch werden.
 
 public class Supermarkt_Model extends Model
 {
-	private int kassenAnzahl;
-	
-	// Zufallszahlengenerator fuer Kundenankuenfte
+	// Zufallszahlengenerator für normale Kunden
 	private ContDistExponential kundenAnkunftsZeit;
 
-    // liefert eine Zufallszahl fuer Kundenankunftszeit
+	// Zufallszahlengenerator für studenten Kunden
+	private ContDistExponential studentAnkunftsZeit;
+
+	// Zufallszahlengenerator für wochenend Kunden
+	private ContDistExponential wochenendeAnkunftsZeit;
+
+	// liefert eine Zufallszahl für normale Kundenankunftszeit
     public double getKundenAnkunftsZeit() {
 	   return kundenAnkunftsZeit.sample();
     }
+    
+    // liefert eine Zufallszahl für studenten Kundenankunftszeit
+    public double getStudentenAnkunftsZeit() {
+	   return studentAnkunftsZeit.sample();
+    }
+    
+    // liefert eine Zufallszahl für wochenend Kundenankunftszeit
+    public double getWochenendeAnkunftsZeit() {
+	   return wochenendeAnkunftsZeit.sample();
+    }
 
-	protected ProcessQueue<SimProcess>[] kassenWarteschlange;
+    //Kassenanzahl + Warteschlangen
+	private int kassenAnzahl;
+	protected ProcessQueue<KundenProcess>[] kassenWarteschlange;
 	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
@@ -52,21 +68,30 @@ public class Supermarkt_Model extends Model
     {
         // Prozess zur Erzeugung von Kunden einrichten
         NeuerKundeProcess neuerKunde = new NeuerKundeProcess(this, "Kundenkreation", true);
+        
         // Prozess starten
         neuerKunde.activate(new TimeSpan(0.0));
     }
 
 	public void init()
 	{
-		kundenAnkunftsZeit = new ContDistExponential(this, "Ankunftszeitintervall", 3.0, true, true);	
+		//Ankunftszeiten initialisieren
+		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 5.0, true, true);	
 		kundenAnkunftsZeit.setNonNegative(true);
 		
+		studentAnkunftsZeit = new ContDistExponential(this, "Studenten Ankunftszeitintervall", 1.0, true, true);	
+		studentAnkunftsZeit.setNonNegative(true);
+		
+		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 3.0, true, true);	
+		wochenendeAnkunftsZeit.setNonNegative(true);
+		
+		//Kassen initialisieren
 		kassenAnzahl = 4;
 		kassenWarteschlange = new ProcessQueue[kassenAnzahl];
 
 		for(int i = 0; i < kassenAnzahl; i++)
 		{
-			kassenWarteschlange[i] = new ProcessQueue<SimProcess>(this, "Kassen Warteschlange " + (i + 1), true, true);
+			kassenWarteschlange[i] = new ProcessQueue<KundenProcess>(this, "Kassen Warteschlange " + (i + 1), true, true);
 		}
 	}
 	
@@ -79,7 +104,7 @@ public class Supermarkt_Model extends Model
 		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
-		supermarktExperiment.stop(new TimeInstant(4140)); //7:00-18:30 * 6
+		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6
 		supermarktExperiment.start();
 		supermarktExperiment.report();
 		supermarktExperiment.finish();

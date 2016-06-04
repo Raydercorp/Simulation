@@ -22,12 +22,13 @@ public class KundenProcess extends SimProcess {
     //   des Schalters 
     public void lifeCycle() throws SuspendExecution{
 
-        // Kunde betritt Schalterraum -> in die Warteschlange geben
+    	//TODO: Auswahl der Warteschlange einfügen!
+        // Kunde betritt Kassenraum -> in die Warteschlange geben
         meinModel.kassenWarteschlange[0].insert(this);
         sendTraceNote("Laenge der Kundenreihe: " + 
             meinModel.kassenWarteschlange[0].length());
 
-        // Schalter frei? 
+        // Kassa frei? 
         /*if (!meinModel.freieSchalterQueue.isEmpty()) {
             // Schalter frei, von entsprechender WS holen
             SchalterProcess schalter = meinModel.freieSchalterQueue.first();
@@ -41,16 +42,13 @@ public class KundenProcess extends SimProcess {
             passivate();
         }
         // Schalter besetzt
-        else {
-        	//Aufgabe
-            meinModel.anzahlWartendeKunden.update(meinModel.kundenReiheQueue.length());
-            
+        else {            
             // Kunde wartet in der WS
             passivate();
         }*/
         
         // Kunde wurde bedient und verlaesst den Schalterraum
         //  -> in diesem Beispiel nur eine Meldung sinnvoll
-        sendTraceNote("Kunde wurde bedient und verlaesst den Schalterraum");
+        sendTraceNote("Kunde wurde bedient und verlässt den Kassenraum");
     }
 }
