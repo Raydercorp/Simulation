@@ -2,7 +2,6 @@ import desmoj.core.dist.ContDistExponential;
 import desmoj.core.simulator.Experiment;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.ProcessQueue;
-import desmoj.core.simulator.SimProcess;
 import desmoj.core.simulator.TimeInstant;
 import desmoj.core.simulator.TimeSpan;
 
@@ -47,6 +46,7 @@ public class Supermarkt_Model extends Model
     //Kassenanzahl + Warteschlangen
 	private int kassenAnzahl;
 	protected ProcessQueue<KundenProcess>[] kassenWarteschlange;
+	protected ProcessQueue<KassaProcess> freieKassaQueue;
 	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
@@ -71,6 +71,12 @@ public class Supermarkt_Model extends Model
         
         // Prozess starten
         neuerKunde.activate(new TimeSpan(0.0));
+        
+		// Eine Kassa öffnen
+		KassaProcess kassa = new KassaProcess(this, "Kassa 1", true);
+		
+		// Kassaprozess starten (= "Kassa wird eroeffnet")
+		kassa.activate(new TimeSpan(0.0));
     }
 
 	public void init()
@@ -85,7 +91,7 @@ public class Supermarkt_Model extends Model
 		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 3.0, true, true);	
 		wochenendeAnkunftsZeit.setNonNegative(true);
 		
-		//Kassen initialisieren
+		//Kassen, -Warteschlange initialisieren
 		kassenAnzahl = 4;
 		kassenWarteschlange = new ProcessQueue[kassenAnzahl];
 
@@ -93,6 +99,9 @@ public class Supermarkt_Model extends Model
 		{
 			kassenWarteschlange[i] = new ProcessQueue<KundenProcess>(this, "Kassen Warteschlange " + (i + 1), true, true);
 		}
+		
+		//Freie Kassa Warteschlange
+    	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS",true, true);
 	}
 	
 	public static void main(String[] args)

@@ -29,14 +29,14 @@ public class KundenProcess extends SimProcess {
             meinModel.kassenWarteschlange[0].length());
 
         // Kassa frei? 
-        /*if (!meinModel.freieSchalterQueue.isEmpty()) {
+        if (!meinModel.freieKassaQueue.isEmpty()) {
             // Schalter frei, von entsprechender WS holen
-            SchalterProcess schalter = meinModel.freieSchalterQueue.first();
+            KassaProcess kassa = meinModel.freieKassaQueue.first();
             // extra Entfernen von WS notwendig
-            meinModel.freieSchalterQueue.remove(schalter);
+            meinModel.freieKassaQueue.remove(kassa);
             
             // Schalter sofort als naechsten Prozess aktivieren
-            schalter.activateAfter(this);
+            kassa.activateAfter(this);
             
             // Bedienvorgang ueber sich ergehen lassen
             passivate();
@@ -45,7 +45,7 @@ public class KundenProcess extends SimProcess {
         else {            
             // Kunde wartet in der WS
             passivate();
-        }*/
+        }
         
         // Kunde wurde bedient und verlaesst den Schalterraum
         //  -> in diesem Beispiel nur eine Meldung sinnvoll

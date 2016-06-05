@@ -24,7 +24,7 @@ public class KassaProcess extends SimProcess
             if (meinModel.kassenWarteschlange[0].isEmpty()) {
                 
                 // Kassa in entsprechende WS
-                //meinModel.freieSchalterQueue.insert(this);
+                meinModel.freieKassaQueue.insert(this);
                 
                 // abwarten weiterer Aktionen
                 passivate();
