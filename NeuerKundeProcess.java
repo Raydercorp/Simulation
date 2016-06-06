@@ -32,7 +32,7 @@ public class NeuerKundeProcess extends SimProcess {
                !(meinModel.presentTime().compareTo(new TimeInstant(3435)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(3450)) <= 0) &&
                !(meinModel.presentTime().compareTo(new TimeInstant(4125)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(4140)) <= 0))
         	{
-        		//TODO: zeitabhängig andere ankunftszeit verwenden und vielleicht mit random auch mehrere kunden erstellen!
+        		//TODO: zeitabhängig andere ankunftszeit vermehrt verwenden und vielleicht mit random auch mehrere kunden erstellen!
         		// Prozess deaktivieren bis naechster Kunde erzeugt werden soll
 	            hold (new TimeSpan(meinModel.getKundenAnkunftsZeit()));
 	     

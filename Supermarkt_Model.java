@@ -75,6 +75,30 @@ public class Supermarkt_Model extends Model
     public double getArtikelproMinute() {
         return artikelProMinute.sample();
     }
+    
+    // Zufallszahlengenerator zur Ermittlung der eintippzeit
+   	private ContDistUniform eintippZeit;
+    
+    // liefert eine Zufallszahl für die eintippzeit
+    public double getEintippZeit() {
+        return eintippZeit.sample();
+    }
+    
+    // Zufallszahlengenerator zur Ermittlung der bezahlzeit mit bargeld
+   	private ContDistUniform barBezahlZeit;
+    
+    // liefert eine Zufallszahl für die bezahlzeit mit bargeld
+    public double getBarBezahlZeit() {
+        return barBezahlZeit.sample();
+    }
+    
+    // Zufallszahlengenerator zur Ermittlung der bezahlzeit mit karte
+   	private ContDistUniform karteBezahlZeit;
+    
+    // liefert eine Zufallszahl für die bezahlzeit mit karte
+    public double getKarteBezahlZeit() {
+        return karteBezahlZeit.sample();
+    }
 
     //Kassenanzahl + Warteschlangen
 	private int kassenAnzahl;
@@ -115,13 +139,13 @@ public class Supermarkt_Model extends Model
 	public void init()
 	{
 		//Ankunftszeiten initialisieren
-		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 3.0, true, true);	
+		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 5.0, true, true);	
 		kundenAnkunftsZeit.setNonNegative(true);
 		
 		studentAnkunftsZeit = new ContDistExponential(this, "Studenten Ankunftszeitintervall", 1.0, true, true);	
 		studentAnkunftsZeit.setNonNegative(true);
 		
-		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 2.0, true, true);	
+		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 3.0, true, true);	
 		wochenendeAnkunftsZeit.setNonNegative(true);
 		
 		//Artikel initialisieren
@@ -131,6 +155,13 @@ public class Supermarkt_Model extends Model
 		
 		//Artikel pro Minute initialisieren
 		artikelProMinute = new ContDistUniform(this, "Artikel pro Minute", 35, 45, true, true);
+		
+		//Eintippzeit initialisieren
+		eintippZeit = new ContDistUniform(this, "Eintippzeit eines Artikels in sekunden", 4, 7, true, true);
+		
+		//Bezahlzeiten initialisieren
+		barBezahlZeit = new ContDistUniform(this, "Bezahlzeit mit Bargeld in sekunden", 10, 20, true, true);
+		karteBezahlZeit = new ContDistUniform(this, "Bezahlzeit mit Karte in sekunden", 18, 22, true, true);
 		
 		//Kassen, -Warteschlange initialisieren
 		kassenAnzahl = 4;
