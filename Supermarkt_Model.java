@@ -19,53 +19,37 @@ aber auch die Kosten fÃ¼r besetzte Kassen nicht zu hoch werden.
  */
 
 public class Supermarkt_Model extends Model
-{
+{	
 	// Zufallszahlengenerator für normale Kunden
 	private ContDistExponential kundenAnkunftsZeit;
-
-	// Zufallszahlengenerator für studenten Kunden
-	private ContDistExponential studentAnkunftsZeit;
-
-	// Zufallszahlengenerator für wochenend Kunden
-	private ContDistExponential wochenendeAnkunftsZeit;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
     public double getKundenAnkunftsZeit() {
 	   return kundenAnkunftsZeit.sample();
     }
     
-    // liefert eine Zufallszahl für studenten Kundenankunftszeit
-    public double getStudentenAnkunftsZeit() {
-	   return studentAnkunftsZeit.sample();
+    // Zufallszahlengenerator zur Ermittlung der Artikel eines kleinen Einkaufs
+   	private ContDistUniform kleinerEinkauf;
+    
+    // Zufallszahlengenerator zur Ermittlung der Artikel eines mittleren Einkaufs
+   	private ContDistUniform mittlererEinkauf;
+    
+    // Zufallszahlengenerator zur Ermittlung der Artikel eines großen Einkaufs
+   	private ContDistUniform grosserEinkauf;
+    
+    // liefert eine Zufallszahl für einen kleinen einkauf
+    public double getKleinerEinkauf() {
+        return kleinerEinkauf.sample();
     }
     
-    // liefert eine Zufallszahl für wochenend Kundenankunftszeit
-    public double getWochenendeAnkunftsZeit() {
-	   return wochenendeAnkunftsZeit.sample();
+    // liefert eine Zufallszahl für einen mittleren einkauf
+    public double getMittlererEinkauf() {
+        return mittlererEinkauf.sample();
     }
     
-    // Zufallszahlengenerator zur Ermittlung der Kunden Artikel
-   	private ContDistUniform kundenArtikel;
-    
-    // Zufallszahlengenerator zur Ermittlung der Studenten Artikel
-   	private ContDistUniform studentenArtikel;
-    
-    // Zufallszahlengenerator zur Ermittlung der Wochenende Artikel
-   	private ContDistUniform wochenendeArtikel;
-    
-    // liefert eine Zufallszahl für Kunden Artikel
-    public double getKundenArtikel() {
-        return kundenArtikel.sample();
-    }
-    
-    // liefert eine Zufallszahl für Studenten Artikel
-    public double getStudentenArtikel() {
-        return studentenArtikel.sample();
-    }
-    
-    // liefert eine Zufallszahl für Wochenende Artikel
-    public double getWochenendeArtikel() {
-        return wochenendeArtikel.sample();
+    // liefert eine Zufallszahl für einen großen einkauf
+    public double getGrosserEinkauf() {
+        return grosserEinkauf.sample();
     }
     
     // Zufallszahlengenerator zur Ermittlung der Artikel pro Minute
@@ -99,11 +83,40 @@ public class Supermarkt_Model extends Model
     public double getKarteBezahlZeit() {
         return karteBezahlZeit.sample();
     }
+    
+    //Maximale Anzahl an Kunden bevor eine kassa öffnet
+    private int maxKunden;
+    
+    public int getMaxKunden()
+    {
+    	return maxKunden;
+    }
+    
+    public void setMaxKunden(int maxKunden)
+    {
+    	this.maxKunden = maxKunden;
+    }
 
     //Kassenanzahl + Warteschlangen
-	private int kassenAnzahl;
+	private int maxKassenAnzahl;
+	private int aktiveKassenAnzahl;
 	protected ProcessQueue<KundenProcess>[] kassenWarteschlange;
 	protected ProcessQueue<KassaProcess> freieKassaQueue;
+	
+	public int getMaxKassenAnzahl()
+	{
+		return maxKassenAnzahl;
+	}
+	
+	public int getAktiveKassenAnzahl()
+	{
+		return aktiveKassenAnzahl;
+	}
+	
+	public void setAktiveKassenAnzahl(int aktiveKassenAnzahl)
+	{
+		this.aktiveKassenAnzahl = aktiveKassenAnzahl;
+	}
 	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
@@ -142,16 +155,10 @@ public class Supermarkt_Model extends Model
 		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 5.0, true, true);	
 		kundenAnkunftsZeit.setNonNegative(true);
 		
-		studentAnkunftsZeit = new ContDistExponential(this, "Studenten Ankunftszeitintervall", 1.0, true, true);	
-		studentAnkunftsZeit.setNonNegative(true);
-		
-		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 3.0, true, true);	
-		wochenendeAnkunftsZeit.setNonNegative(true);
-		
-		//Artikel initialisieren
-		kundenArtikel = new ContDistUniform(this, "Kunden Artikel", 5, 30, true, true);
-		studentenArtikel = new ContDistUniform(this, "Studenten Artikel", 1, 10, true, true);
-		wochenendeArtikel = new ContDistUniform(this, "Kunden Artikel", 30, 80, true, true);
+		//Einkauf initialisieren
+		kleinerEinkauf = new ContDistUniform(this, "Kleiner Einkauf", 1, 10, true, true);
+		mittlererEinkauf = new ContDistUniform(this, "Mittlerer Einkauf", 10, 30, true, true);
+		grosserEinkauf = new ContDistUniform(this, "Großer Einkauf", 30, 100, true, true);
 		
 		//Artikel pro Minute initialisieren
 		artikelProMinute = new ContDistUniform(this, "Artikel pro Minute", 35, 45, true, true);
@@ -164,16 +171,20 @@ public class Supermarkt_Model extends Model
 		karteBezahlZeit = new ContDistUniform(this, "Bezahlzeit mit Karte in sekunden", 18, 22, true, true);
 		
 		//Kassen, -Warteschlange initialisieren
-		kassenAnzahl = 4;
-		kassenWarteschlange = new ProcessQueue[kassenAnzahl];
+		maxKassenAnzahl = 4;
+		aktiveKassenAnzahl = 1;
+		kassenWarteschlange = new ProcessQueue[maxKassenAnzahl];
 
-		for(int i = 0; i < kassenAnzahl; i++)
+		for(int i = 0; i < maxKassenAnzahl; i++)
 		{
 			kassenWarteschlange[i] = new ProcessQueue<KundenProcess>(this, "Kassen Warteschlange " + (i + 1), true, true);
 		}
 		
 		//Freie Kassa Warteschlange
     	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS",true, true);
+    	
+    	//Maximale Anzahl an Kunden
+    	maxKunden = 7;
 	}
 	
 	public static void main(String[] args)
@@ -182,7 +193,7 @@ public class Supermarkt_Model extends Model
 		Supermarkt_Model supermarktModel = new Supermarkt_Model(null, "Supermarkt Model", true, true);
 		supermarktModel.connectToExperiment(supermarktExperiment);
 		
-		supermarktExperiment.tracePeriod(new TimeInstant(660.0), new TimeInstant(690.0));
+		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6

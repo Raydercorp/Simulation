@@ -32,16 +32,19 @@ public class NeuerKundeProcess extends SimProcess {
                !(meinModel.presentTime().compareTo(new TimeInstant(3435)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(3450)) <= 0) &&
                !(meinModel.presentTime().compareTo(new TimeInstant(4125)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(4140)) <= 0))
         	{
-        		//TODO: zeitabhängig andere ankunftszeit vermehrt verwenden und vielleicht mit random auch mehrere kunden erstellen!
         		// Prozess deaktivieren bis naechster Kunde erzeugt werden soll
 	            hold (new TimeSpan(meinModel.getKundenAnkunftsZeit()));
 	     
-	            // neuen Kunden erzeugen
-	            KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
-	    
-	            // neuer Kunde betritt Schalterbereich -> Kunde ist zu aktivieren
-	            //  soll unmittelbar nach diesem Generator-Ereignis geschehen
-	            neuerKunde.activateAfter(this);
+	            //TODO: zeitabhängig mehr oder weniger Kunden erzeugen!
+	            // neue Kunden erzeugen
+	            for(int i = 0; i < (int) (Math.random() * 20); i++)
+	            {
+	            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
+	        	    
+		            // neuer Kunde betritt Schalterbereich -> Kunde ist zu aktivieren
+		            //  soll unmittelbar nach diesem Generator-Ereignis geschehen
+		            neuerKunde.activateAfter(this);
+	            }
         	}
         	else
         	{

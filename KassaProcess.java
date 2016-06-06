@@ -5,6 +5,8 @@ import desmoj.core.simulator.TimeSpan;
 
 public class KassaProcess extends SimProcess
 {
+	private int maxArtikelAufBand = 150;
+	
 	private Supermarkt_Model meinModel;
 	
 	public KassaProcess(Model owner, String name, boolean showInTrace)
@@ -12,8 +14,6 @@ public class KassaProcess extends SimProcess
 		super(owner, name, showInTrace);
 		
 		meinModel = (Supermarkt_Model) owner;
-		
-		
 	}
 
 	public void lifeCycle() throws SuspendExecution
@@ -34,6 +34,24 @@ public class KassaProcess extends SimProcess
             
             // Kunde wartet
             else {
+            	int wartendeKunden = 0;
+            	
+            	for(int i = 0; i < meinModel.kassenWarteschlange.length; i++)
+            	{
+            		wartendeKunden += meinModel.kassenWarteschlange[i].length();
+            	}
+            	
+            	if(wartendeKunden >= meinModel.getMaxKunden() && meinModel.getAktiveKassenAnzahl() != meinModel.getMaxKassenAnzahl())
+            	{
+            		// Eine Kassa öffnen
+            		KassaProcess kassa = new KassaProcess(meinModel, "Kassa " + (meinModel.getAktiveKassenAnzahl() + 1), true);
+            		
+            		// Kassaprozess starten (= "Kassa wird eroeffnet")
+            		kassa.activate(new TimeSpan(0.0));
+
+            		meinModel.setMaxKunden(meinModel.getMaxKunden() * 2);
+            		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() + 1);
+            	}
                 
                 // ersten Kunden aus WS entfernen
                 KundenProcess kunde = meinModel.kassenWarteschlange[0].first();
@@ -46,8 +64,8 @@ public class KassaProcess extends SimProcess
                 //Artikel kann nicht gescannt werden
                 for(int i = 0; i < kunde.getArtikelAnzahl(); i++)
                 {
-                	//0,5% der Artikel können nicht gescannt werden
-                	if(Math.random() <= 0.005)
+                	//0,1% der Artikel können nicht gescannt werden
+                	if(Math.random() <= 0.001)
                 	{
                 		//zwischen 4 und 7 sekunden zum eintippen
                 		hold(new TimeSpan(1 / 60 * meinModel.getEintippZeit()));
