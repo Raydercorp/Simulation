@@ -28,8 +28,19 @@ public class KundenProcess extends SimProcess {
     //   des Schalters 
     public void lifeCycle() throws SuspendExecution{
 
-    	//TODO: Auswahl der Warteschlange einfügen!
+    	//Artikel pro Kassa WS, TODO: diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
+		int artikel[] = new int[meinModel.getAktiveKassenAnzahl()];
+		
+    	for(int i = 0; i < meinModel.getAktiveKassenAnzahl(); i++)
+    	{
+    		for(int j = 0; j < meinModel.kassenWarteschlange[i].length(); j++)
+    		{
+    			artikel[i] += meinModel.kassenWarteschlange[i].get(j).getArtikelAnzahl();
+    		}
+    	}
+
         // Kunde betritt Kassenraum -> in die Warteschlange geben
+		//TODO: Kunde wählt die Kassa nach anzahl der artikel + kunden aus
         meinModel.kassenWarteschlange[0].insert(this);
         sendTraceNote("Laenge der Kundenreihe: " + 
             meinModel.kassenWarteschlange[0].length());
