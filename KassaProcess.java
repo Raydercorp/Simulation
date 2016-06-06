@@ -12,6 +12,8 @@ public class KassaProcess extends SimProcess
 		super(owner, name, showInTrace);
 		
 		meinModel = (Supermarkt_Model) owner;
+		
+		
 	}
 
 	public void lifeCycle() throws SuspendExecution
@@ -40,7 +42,7 @@ public class KassaProcess extends SimProcess
                 //TODO: Artikel Anzahl / Artikel pro minute!
                 // Kunde wird bedient
                 // -> Prozess wird solange inaktiv gestellt
-                hold(new TimeSpan(1));
+                hold(new TimeSpan(kunde.getArtikelAnzahl() / meinModel.getArtikelproMinute()));
                 
                 // Kunde wurde bedient, kann den Schalter verlassen
                 // -> muss reaktiviert werden (für Abschlussaktionen)

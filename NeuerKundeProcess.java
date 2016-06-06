@@ -24,13 +24,13 @@ public class NeuerKundeProcess extends SimProcess {
 	
         while (true)
         {
-        	//ca. 30 minuten vorm zusperren, darf keiner mehr rein
-        	if(!(meinModel.presentTime().compareTo(new TimeInstant(660)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(1350)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(1380)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(2040)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2070)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(2730)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2760)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(3420)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(3450)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(4110)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(4140)) <= 0))
+        	//ca. 15 minuten vorm zusperren, darf keiner mehr rein
+        	if(!(meinModel.presentTime().compareTo(new TimeInstant(675)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690)) <= 0) &&
+               !(meinModel.presentTime().compareTo(new TimeInstant(1365)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(1380)) <= 0) &&
+               !(meinModel.presentTime().compareTo(new TimeInstant(2055)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2070)) <= 0) &&
+               !(meinModel.presentTime().compareTo(new TimeInstant(2745)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2760)) <= 0) &&
+               !(meinModel.presentTime().compareTo(new TimeInstant(3435)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(3450)) <= 0) &&
+               !(meinModel.presentTime().compareTo(new TimeInstant(4125)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(4140)) <= 0))
         	{
         		//TODO: zeitabhängig andere ankunftszeit verwenden und vielleicht mit random auch mehrere kunden erstellen!
         		// Prozess deaktivieren bis naechster Kunde erzeugt werden soll

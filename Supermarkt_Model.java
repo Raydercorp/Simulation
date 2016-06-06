@@ -1,4 +1,5 @@
 import desmoj.core.dist.ContDistExponential;
+import desmoj.core.dist.ContDistUniform;
 import desmoj.core.simulator.Experiment;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.ProcessQueue;
@@ -42,6 +43,38 @@ public class Supermarkt_Model extends Model
     public double getWochenendeAnkunftsZeit() {
 	   return wochenendeAnkunftsZeit.sample();
     }
+    
+    // Zufallszahlengenerator zur Ermittlung der Kunden Artikel
+   	private ContDistUniform kundenArtikel;
+    
+    // Zufallszahlengenerator zur Ermittlung der Studenten Artikel
+   	private ContDistUniform studentenArtikel;
+    
+    // Zufallszahlengenerator zur Ermittlung der Wochenende Artikel
+   	private ContDistUniform wochenendeArtikel;
+    
+    // liefert eine Zufallszahl für Kunden Artikel
+    public double getKundenArtikel() {
+        return kundenArtikel.sample();
+    }
+    
+    // liefert eine Zufallszahl für Studenten Artikel
+    public double getStudentenArtikel() {
+        return studentenArtikel.sample();
+    }
+    
+    // liefert eine Zufallszahl für Wochenende Artikel
+    public double getWochenendeArtikel() {
+        return wochenendeArtikel.sample();
+    }
+    
+    // Zufallszahlengenerator zur Ermittlung der Artikel pro Minute
+   	private ContDistUniform artikelProMinute;
+    
+    // liefert eine Zufallszahl für Artikel pro Minute
+    public double getArtikelproMinute() {
+        return artikelProMinute.sample();
+    }
 
     //Kassenanzahl + Warteschlangen
 	private int kassenAnzahl;
@@ -82,14 +115,22 @@ public class Supermarkt_Model extends Model
 	public void init()
 	{
 		//Ankunftszeiten initialisieren
-		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 5.0, true, true);	
+		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 3.0, true, true);	
 		kundenAnkunftsZeit.setNonNegative(true);
 		
 		studentAnkunftsZeit = new ContDistExponential(this, "Studenten Ankunftszeitintervall", 1.0, true, true);	
 		studentAnkunftsZeit.setNonNegative(true);
 		
-		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 3.0, true, true);	
+		wochenendeAnkunftsZeit = new ContDistExponential(this, "Wochenende Ankunftszeitintervall", 2.0, true, true);	
 		wochenendeAnkunftsZeit.setNonNegative(true);
+		
+		//Artikel initialisieren
+		kundenArtikel = new ContDistUniform(this, "Kunden Artikel", 5, 30, true, true);
+		studentenArtikel = new ContDistUniform(this, "Studenten Artikel", 1, 10, true, true);
+		wochenendeArtikel = new ContDistUniform(this, "Kunden Artikel", 30, 80, true, true);
+		
+		//Artikel pro Minute initialisieren
+		artikelProMinute = new ContDistUniform(this, "Artikel pro Minute", 35, 45, true, true);
 		
 		//Kassen, -Warteschlange initialisieren
 		kassenAnzahl = 4;
@@ -110,7 +151,7 @@ public class Supermarkt_Model extends Model
 		Supermarkt_Model supermarktModel = new Supermarkt_Model(null, "Supermarkt Model", true, true);
 		supermarktModel.connectToExperiment(supermarktExperiment);
 		
-		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
+		supermarktExperiment.tracePeriod(new TimeInstant(660.0), new TimeInstant(690.0));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6

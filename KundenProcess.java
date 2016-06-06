@@ -3,6 +3,8 @@ import co.paralleluniverse.fibers.SuspendExecution;
 
 // stellt die Kundenaktivitaeten als Prozess dar
 public class KundenProcess extends SimProcess {
+	
+	private int artikel;
 
     // nuetzliche Referenz auf entsprechendes Modell
     private Supermarkt_Model meinModel;
@@ -15,6 +17,8 @@ public class KundenProcess extends SimProcess {
         super(owner, name, showInTrace);
 
         meinModel = (Supermarkt_Model) owner;
+        
+        artikel = (int) meinModel.getKundenArtikel();
     }
 
     
@@ -50,5 +54,10 @@ public class KundenProcess extends SimProcess {
         // Kunde wurde bedient und verlaesst den Schalterraum
         //  -> in diesem Beispiel nur eine Meldung sinnvoll
         sendTraceNote("Kunde wurde bedient und verlässt den Kassenraum");
+    }
+    
+    public int getArtikelAnzahl()
+    {
+    	return artikel;
     }
 }
