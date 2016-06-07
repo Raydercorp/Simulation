@@ -86,15 +86,21 @@ public class Supermarkt_Model extends Model
     
     //Maximale Anzahl an Kunden bevor eine kassa öffnet
     private int maxKunden;
+    private int aktuelleMaxKunden;
     
     public int getMaxKunden()
     {
     	return maxKunden;
     }
     
-    public void setMaxKunden(int maxKunden)
+    public int getAktuelleMaxKunden()
     {
-    	this.maxKunden = maxKunden;
+    	return aktuelleMaxKunden;
+    }
+    
+    public void setAktuelleMaxKunden(int aktuelleMaxKunden)
+    {
+    	this.aktuelleMaxKunden = aktuelleMaxKunden;
     }
     
     //Zeit bevor eine Kassa schließt
