@@ -207,7 +207,7 @@ public class Supermarkt_Model extends Model
 		Supermarkt_Model supermarktModel = new Supermarkt_Model(null, "Supermarkt Model", true, true);
 		supermarktModel.connectToExperiment(supermarktExperiment);
 		
-		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(690));
+		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(700));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6

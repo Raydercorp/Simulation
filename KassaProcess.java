@@ -23,27 +23,24 @@ public class KassaProcess extends SimProcess
         while (true)
         {
             // kein Kunde wartet
-            if (meinModel.kassenWarteschlange[kassaNummer].isEmpty()) {
-                
-                // Kassa in entsprechende WS
-                meinModel.freieKassaQueue.insert(this);
-                
-                // abwarten weiterer Aktionen
-                passivate();
-                
+            if (meinModel.kassenWarteschlange[kassaNummer].isEmpty())
+            {
                 if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].maxWaitTime().compareTo(new TimeSpan(meinModel.getKassaSchliessen())) >= 0)
                 {
                 	//TODO: Kassa, -warteschlange löschen!
                 	meinModel.kassenWarteschlange[kassaNummer].reset();
-                	KassaProcess kassa = this;
-                	
-                	meinModel.freieKassaQueue.remove(kassa);
-                	
-                	kassa = null;
-                	
             		meinModel.setMaxKunden(meinModel.getMaxKunden() / 2);
             		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() - 1);
+
+                	sendTraceNote("Kassa: " + kassaNummer + " schließt!");
+                	return;
                 }
+
+                // Kassa in entsprechende WS
+                meinModel.freieKassaQueue.insert(this);
+                    
+                // abwarten weiterer Aktionen
+                passivate();
             }
             
             // Kunde wartet
