@@ -6,6 +6,7 @@ import desmoj.core.simulator.TimeSpan;
 public class KassaProcess extends SimProcess
 {
 	private int maxArtikelAufBand = 150;
+	private int kassaNummer;
 	
 	private Supermarkt_Model meinModel;
 	
@@ -21,15 +22,28 @@ public class KassaProcess extends SimProcess
 		// Kassa ist immer in Aktion -> Endlosschleife
         while (true)
         {
-        	//TODO: Alle Kassen unterstützen!
             // kein Kunde wartet
-            if (meinModel.kassenWarteschlange[0].isEmpty()) {
+            if (meinModel.kassenWarteschlange[kassaNummer].isEmpty()) {
                 
                 // Kassa in entsprechende WS
                 meinModel.freieKassaQueue.insert(this);
                 
                 // abwarten weiterer Aktionen
                 passivate();
+                
+                if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].maxWaitTime().compareTo(new TimeSpan(meinModel.getKassaSchliessen())) >= 0)
+                {
+                	//TODO: Kassa, -warteschlange löschen!
+                	meinModel.kassenWarteschlange[kassaNummer].reset();
+                	KassaProcess kassa = this;
+                	
+                	meinModel.freieKassaQueue.remove(kassa);
+                	
+                	kassa = null;
+                	
+            		meinModel.setMaxKunden(meinModel.getMaxKunden() / 2);
+            		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() - 1);
+                }
             }
             
             // Kunde wartet
@@ -46,6 +60,8 @@ public class KassaProcess extends SimProcess
             		// Eine Kassa öffnen
             		KassaProcess kassa = new KassaProcess(meinModel, "Kassa " + (meinModel.getAktiveKassenAnzahl() + 1), true);
             		
+            		kassa.setKassaNummer(meinModel.getAktiveKassenAnzahl());
+            		
             		// Kassaprozess starten (= "Kassa wird eroeffnet")
             		kassa.activate(new TimeSpan(0.0));
 
@@ -54,8 +70,8 @@ public class KassaProcess extends SimProcess
             	}
                 
                 // ersten Kunden aus WS entfernen
-                KundenProcess kunde = meinModel.kassenWarteschlange[0].first();
-                meinModel.kassenWarteschlange[0].remove(kunde);
+                KundenProcess kunde = meinModel.kassenWarteschlange[kassaNummer].first();
+                meinModel.kassenWarteschlange[kassaNummer].remove(kunde);
                 
                 // Artikel werden gescannt
                 // -> Prozess wird solange inaktiv gestellt
@@ -89,5 +105,10 @@ public class KassaProcess extends SimProcess
                 kunde.activate(new TimeSpan(0.0));
             }
         }
+	}
+	
+	public void setKassaNummer(int kassaNummer)
+	{
+		this.kassaNummer = kassaNummer;
 	}
 }

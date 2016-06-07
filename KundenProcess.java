@@ -28,7 +28,7 @@ public class KundenProcess extends SimProcess {
     //   des Schalters 
     public void lifeCycle() throws SuspendExecution{
 
-    	//Artikel pro Kassa WS, TODO: diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
+    	//Artikel pro Kassa WS, diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
 		int artikel[] = new int[meinModel.getAktiveKassenAnzahl()];
 		
     	for(int i = 0; i < meinModel.getAktiveKassenAnzahl(); i++)
@@ -38,12 +38,40 @@ public class KundenProcess extends SimProcess {
     			artikel[i] += meinModel.kassenWarteschlange[i].get(j).getArtikelAnzahl();
     		}
     	}
+    	
+    	//Klassifizierung
+    	for(int i = 0; i < artikel.length; i++)
+    	{
+    		artikel[i] = grobeArtikelAnzahl(artikel[i]);
+    	}
+    	
+    	//Minimum
+    	int min = artikel[0];
+    	int minIndex = 0;
+    	for(int i = 1; i <  artikel.length; i++)
+    	{
+    		if(artikel[i] < min)
+    		{
+    			min = artikel[i];
+    			minIndex = i;
+    		}
+    		else if(artikel[i] == min)
+    		{
+    			if(meinModel.kassenWarteschlange[minIndex].length() > meinModel.kassenWarteschlange[i].length())
+    			{
+    				minIndex = i;
+    			}
+    		}
+    	}
 
         // Kunde betritt Kassenraum -> in die Warteschlange geben
-		//TODO: Kunde wählt die Kassa nach anzahl der artikel + kunden aus
-        meinModel.kassenWarteschlange[0].insert(this);
-        sendTraceNote("Laenge der Kundenreihe: " + 
-            meinModel.kassenWarteschlange[0].length());
+        meinModel.kassenWarteschlange[minIndex].insert(this);
+        
+        for(int i = 0; i < meinModel.getAktiveKassenAnzahl(); i++)
+        {
+	        sendTraceNote("Laenge der Kundenreihe: " + 
+	            meinModel.kassenWarteschlange[i].length());
+        }
 
         // Kassa frei? 
         if (!meinModel.freieKassaQueue.isEmpty()) {
@@ -136,5 +164,33 @@ public class KundenProcess extends SimProcess {
         {
         	artikel = (int) meinModel.getGrosserEinkauf();
         }
+    }
+    
+    private int grobeArtikelAnzahl(int artikel)
+    {
+    	if(artikel <= 20)
+    	{
+    		return 0;
+    	}
+    	else if(artikel > 20 && artikel <= 40)
+    	{
+    		return 1;
+    	}
+    	else if(artikel > 40 && artikel <= 60)
+    	{
+    		return 2;
+    	}
+    	else if(artikel > 60 && artikel <= 80)
+    	{
+    		return 3;
+    	}
+    	else if(artikel > 80 && artikel <= 100)
+    	{
+    		return 4;
+    	}
+    	else
+    	{
+    		return 5;
+    	}
     }
 }

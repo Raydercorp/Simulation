@@ -96,6 +96,14 @@ public class Supermarkt_Model extends Model
     {
     	this.maxKunden = maxKunden;
     }
+    
+    //Zeit bevor eine Kassa schließt
+    private int kassaSchliessen;
+    
+    public int getKassaSchliessen()
+    {
+    	return kassaSchliessen;
+    }
 
     //Kassenanzahl + Warteschlangen
 	private int maxKassenAnzahl;
@@ -145,6 +153,8 @@ public class Supermarkt_Model extends Model
 		// Eine Kassa öffnen
 		KassaProcess kassa = new KassaProcess(this, "Kassa 1", true);
 		
+		kassa.setKassaNummer(0);
+		
 		// Kassaprozess starten (= "Kassa wird eroeffnet")
 		kassa.activate(new TimeSpan(0.0));
     }
@@ -175,6 +185,7 @@ public class Supermarkt_Model extends Model
 		aktiveKassenAnzahl = 1;
 		kassenWarteschlange = new ProcessQueue[maxKassenAnzahl];
 
+		//TODO: Warteschlange nur erstellen wenn eine Kassa öffnet!
 		for(int i = 0; i < maxKassenAnzahl; i++)
 		{
 			kassenWarteschlange[i] = new ProcessQueue<KundenProcess>(this, "Kassen Warteschlange " + (i + 1), true, true);
@@ -184,7 +195,10 @@ public class Supermarkt_Model extends Model
     	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS",true, true);
     	
     	//Maximale Anzahl an Kunden
-    	maxKunden = 7;
+    	maxKunden = 5;
+    	
+    	//Zeit
+    	kassaSchliessen = 3;
 	}
 	
 	public static void main(String[] args)
@@ -193,7 +207,7 @@ public class Supermarkt_Model extends Model
 		Supermarkt_Model supermarktModel = new Supermarkt_Model(null, "Supermarkt Model", true, true);
 		supermarktModel.connectToExperiment(supermarktExperiment);
 		
-		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(60));
+		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(690));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6
