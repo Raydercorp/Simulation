@@ -29,13 +29,20 @@ public class KundenProcess extends SimProcess {
     public void lifeCycle() throws SuspendExecution{
 
     	//Artikel pro Kassa WS, diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
-		int artikel[] = new int[meinModel.getAktiveKassenAnzahl()];
+		int artikel[] = new int[meinModel.getMaxKassenAnzahl()];
 		
-    	for(int i = 0; i < meinModel.getAktiveKassenAnzahl(); i++)
+    	for(int i = 0; i < meinModel.getMaxKassenAnzahl(); i++)
     	{
-    		for(int j = 0; j < meinModel.kassenWarteschlange[i].length(); j++)
+    		if(meinModel.kassa[i] != null)
     		{
-    			artikel[i] += meinModel.kassenWarteschlange[i].get(j).getArtikelAnzahl();
+	    		for(int j = 0; j < meinModel.kassenWarteschlange[i].length(); j++)
+	    		{
+	    			artikel[i] += meinModel.kassenWarteschlange[i].get(j).getArtikelAnzahl();
+	    		}
+    		}
+    		else
+    		{
+    			artikel[i] = -1;
     		}
     	}
     	
@@ -48,6 +55,7 @@ public class KundenProcess extends SimProcess {
     	//Minimum
     	int min = artikel[0];
     	int minIndex = 0;
+    	
     	for(int i = 1; i <  artikel.length; i++)
     	{
     		if(artikel[i] < min)
@@ -168,6 +176,11 @@ public class KundenProcess extends SimProcess {
     
     private int grobeArtikelAnzahl(int artikel)
     {
+    	if(artikel == -1)
+    	{
+    		return Integer.MAX_VALUE;
+    	}
+    	
     	if(artikel <= 20)
     	{
     		return 0;

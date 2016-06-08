@@ -115,6 +115,7 @@ public class Supermarkt_Model extends Model
 	private int maxKassenAnzahl;
 	private int aktiveKassenAnzahl;
 	protected ProcessQueue<KundenProcess>[] kassenWarteschlange;
+	protected KassaProcess[] kassa;
 	protected ProcessQueue<KassaProcess> freieKassaQueue;
 	
 	public int getMaxKassenAnzahl()
@@ -157,12 +158,12 @@ public class Supermarkt_Model extends Model
         neuerKunde.activate(new TimeSpan(0.0));
         
 		// Eine Kassa öffnen
-		KassaProcess kassa = new KassaProcess(this, "Kassa 1", true);
+		kassa[0] = new KassaProcess(this, "Kassa 1", true);
 		
-		kassa.setKassaNummer(0);
+		kassa[0].setKassaNummer(0);
 		
 		// Kassaprozess starten (= "Kassa wird eroeffnet")
-		kassa.activate(new TimeSpan(0.0));
+		kassa[0].activate(new TimeSpan(0.0));
     }
 
 	public void init()
@@ -190,6 +191,7 @@ public class Supermarkt_Model extends Model
 		maxKassenAnzahl = 4;
 		aktiveKassenAnzahl = 1;
 		kassenWarteschlange = new ProcessQueue[maxKassenAnzahl];
+		kassa = new KassaProcess[maxKassenAnzahl];
 
 		//TODO: Warteschlange nur erstellen wenn eine Kassa öffnet!
 		for(int i = 0; i < maxKassenAnzahl; i++)

@@ -32,7 +32,8 @@ public class KassaProcess extends SimProcess
             		meinModel.setAktuelleMaxKunden(meinModel.getAktuelleMaxKunden() - meinModel.getMaxKunden());
             		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() - 1);
 
-                	sendTraceNote("Kassa: " + kassaNummer + " schließt!");
+                	sendTraceNote("Kassa: " + (kassaNummer + 1) + " schließt!");
+                	meinModel.kassa[kassaNummer] = null;
                 	return;
                 }
 
@@ -55,12 +56,19 @@ public class KassaProcess extends SimProcess
             	if(wartendeKunden >= meinModel.getAktuelleMaxKunden() && meinModel.getAktiveKassenAnzahl() != meinModel.getMaxKassenAnzahl())
             	{
             		// Eine Kassa öffnen
-            		KassaProcess kassa = new KassaProcess(meinModel, "Kassa " + (meinModel.getAktiveKassenAnzahl() + 1), true);
-            		
-            		kassa.setKassaNummer(meinModel.getAktiveKassenAnzahl());
-            		
-            		// Kassaprozess starten (= "Kassa wird eroeffnet")
-            		kassa.activate(new TimeSpan(0.0));
+            		for(int i = 0; i < meinModel.kassa.length; i++)
+            		{
+            			if(meinModel.kassa[i] == null)
+            			{
+            				meinModel.kassa[i] = new KassaProcess(meinModel, "Kassa " + (i + 1), true);
+            				meinModel.kassa[i].setKassaNummer(i);
+                    		
+                    		// Kassaprozess starten (= "Kassa wird eroeffnet")
+            				meinModel.kassa[i].activate(new TimeSpan(0.0));
+            				
+            				break;
+            			}
+            		}
 
             		meinModel.setAktuelleMaxKunden(meinModel.getAktuelleMaxKunden() + meinModel.getMaxKunden());
             		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() + 1);
