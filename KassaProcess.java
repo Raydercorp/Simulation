@@ -64,7 +64,7 @@ public class KassaProcess extends SimProcess
             				meinModel.kassa[i].setKassaNummer(i);
                     		
                     		// Kassaprozess starten (= "Kassa wird eroeffnet")
-            				meinModel.kassa[i].activate(new TimeSpan(0.0));
+            				meinModel.kassa[i].activate(new TimeSpan(meinModel.getKassaOeffnetZeit()));
             				
             				break;
             			}

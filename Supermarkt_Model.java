@@ -26,6 +26,14 @@ public class Supermarkt_Model extends Model
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
     public double getKundenAnkunftsZeit() {
 	   return kundenAnkunftsZeit.sample();
+    }	
+    
+	// Zufallszahlengenerator für Kassa öffnet zeit
+	private ContDistUniform kassaOeffnetZeit;
+
+	// liefert eine Zufallszahl für normale Kundenankunftszeit
+    public double getKassaOeffnetZeit() {
+	   return kassaOeffnetZeit.sample();
     }
     
     // Zufallszahlengenerator zur Ermittlung der Artikel eines kleinen Einkaufs
@@ -171,6 +179,10 @@ public class Supermarkt_Model extends Model
 		//Ankunftszeiten initialisieren
 		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 5.0, true, true);	
 		kundenAnkunftsZeit.setNonNegative(true);
+		
+		//Kassa öffnet zeiten initialisieren
+		kassaOeffnetZeit = new ContDistUniform(this, "Kassa öffnet Zeit", 1.5, 3.0, true, true);	
+		kassaOeffnetZeit.setNonNegative(true);
 		
 		//Einkauf initialisieren
 		kleinerEinkauf = new ContDistUniform(this, "Kleiner Einkauf", 1, 10, true, true);
