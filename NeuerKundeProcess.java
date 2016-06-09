@@ -25,12 +25,7 @@ public class NeuerKundeProcess extends SimProcess {
         while (true)
         {
         	//ca. 15 minuten vorm zusperren, darf keiner mehr rein
-        	if(!(meinModel.presentTime().compareTo(new TimeInstant(675)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(1365)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(1380)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(2055)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2070)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(2745)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2760)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(3435)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(3450)) <= 0) &&
-               !(meinModel.presentTime().compareTo(new TimeInstant(4125)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(4140)) <= 0))
+        	if(darfKundschaftRein())
         	{
         		// Prozess deaktivieren bis naechster Kunde erzeugt werden soll
 	            hold (new TimeSpan(meinModel.getKundenAnkunftsZeit()));
@@ -80,5 +75,22 @@ public class NeuerKundeProcess extends SimProcess {
         		}
         	}
         }
+    }
+    
+    private boolean darfKundschaftRein()
+    {
+    	if(!(meinModel.presentTime().compareTo(new TimeInstant(675)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690)) <= 0) &&
+    	   !(meinModel.presentTime().compareTo(new TimeInstant(1365)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(1380)) <= 0) &&
+           !(meinModel.presentTime().compareTo(new TimeInstant(2055)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2070)) <= 0) &&
+           !(meinModel.presentTime().compareTo(new TimeInstant(2745)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(2760)) <= 0) &&
+           !(meinModel.presentTime().compareTo(new TimeInstant(3435)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(3450)) <= 0) &&
+           !(meinModel.presentTime().compareTo(new TimeInstant(4125)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(4140)) <= 0))
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
     }
 }

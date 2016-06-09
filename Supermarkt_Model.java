@@ -216,6 +216,7 @@ public class Supermarkt_Model extends Model
     	
     	//Maximale Anzahl an Kunden
     	maxKunden = 5;
+    	aktuelleMaxKunden = maxKunden;
     	
     	//Zeit
     	kassaSchliessen = 3;

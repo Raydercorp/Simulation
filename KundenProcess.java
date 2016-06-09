@@ -5,7 +5,7 @@ import co.paralleluniverse.fibers.SuspendExecution;
 public class KundenProcess extends SimProcess {
 	
 	private int artikel;
-	private boolean aufgelegt = false; //TODO: wechsel der ws nur möglich wenn false (dazu artikel auf band zählen und mit max vergleichen)
+	private boolean aufgelegt = false;
 
     // nuetzliche Referenz auf entsprechendes Modell
     private Supermarkt_Model meinModel;
@@ -30,6 +30,7 @@ public class KundenProcess extends SimProcess {
 
     	//Artikel pro Kassa WS, diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
 		int artikel[] = new int[meinModel.getMaxKassenAnzahl()];
+		int abgeschätzteArtikel[] = new int[meinModel.getMaxKassenAnzahl()];
 		
     	for(int i = 0; i < meinModel.getMaxKassenAnzahl(); i++)
     	{
@@ -49,7 +50,7 @@ public class KundenProcess extends SimProcess {
     	//Klassifizierung
     	for(int i = 0; i < artikel.length; i++)
     	{
-    		artikel[i] = grobeArtikelAnzahl(artikel[i]);
+    		abgeschätzteArtikel[i] = grobeArtikelAnzahl(artikel[i]);
     	}
     	
     	//Minimum
@@ -58,12 +59,12 @@ public class KundenProcess extends SimProcess {
     	
     	for(int i = 1; i <  artikel.length; i++)
     	{
-    		if(artikel[i] < min)
+    		if(abgeschätzteArtikel[i] < min)
     		{
-    			min = artikel[i];
+    			min = abgeschätzteArtikel[i];
     			minIndex = i;
     		}
-    		else if(artikel[i] == min)
+    		else if(abgeschätzteArtikel[i] == min)
     		{
     			if(meinModel.kassenWarteschlange[minIndex].length() > meinModel.kassenWarteschlange[i].length())
     			{
@@ -74,6 +75,10 @@ public class KundenProcess extends SimProcess {
 
         // Kunde betritt Kassenraum -> in die Warteschlange geben
         meinModel.kassenWarteschlange[minIndex].insert(this);
+        if(artikel[minIndex] < meinModel.kassa[minIndex].getMaxArtikelAufBand())
+        {
+        	this.aufgelegt = true;
+        }
         
         for(int i = 0; i < meinModel.getAktiveKassenAnzahl(); i++)
         {
