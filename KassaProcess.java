@@ -8,7 +8,7 @@ public class KassaProcess extends SimProcess
 {
 	private int maxArtikelAufBand = 150;
 	private int kassaNummer;
-	private TimeInstant passivate;
+	private TimeInstant passivateTime;
 	
 	private Supermarkt_Model meinModel;
 	
@@ -27,7 +27,8 @@ public class KassaProcess extends SimProcess
             // kein Kunde wartet
             if (meinModel.kassenWarteschlange[kassaNummer].isEmpty())
             {
-                if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].length() == 0 && passivate != null && (meinModel.kassa[kassaNummer].presentTime().getTimeAsDouble() - passivate.getTimeAsDouble()) >= meinModel.getKassaSchliessen())
+                if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].length() == 0 && passivateTime != null &&
+                  (meinModel.kassa[kassaNummer].presentTime().getTimeAsDouble() - passivateTime.getTimeAsDouble()) >= meinModel.getKassaSchliessen())
                 {
                 	meinModel.kassenWarteschlange[kassaNummer].reset();
             		meinModel.setAktuelleMaxKunden(meinModel.getAktuelleMaxKunden() - meinModel.getMaxKunden());
@@ -41,7 +42,10 @@ public class KassaProcess extends SimProcess
                 // Kassa in entsprechende WS
                 meinModel.freieKassaQueue.insert(this);
                 
-                passivate = meinModel.kassa[kassaNummer].presentTime();
+                if(passivateTime == null)
+                {
+                	passivateTime = meinModel.kassa[kassaNummer].presentTime();
+                }
                     
                 // abwarten weiterer Aktionen
                 passivate();
@@ -76,6 +80,8 @@ public class KassaProcess extends SimProcess
             		meinModel.setAktuelleMaxKunden(meinModel.getAktuelleMaxKunden() + meinModel.getMaxKunden());
             		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() + 1);
             	}
+            	
+            	passivateTime = null;
                 
                 // ersten Kunden aus WS entfernen
                 KundenProcess kunde = meinModel.kassenWarteschlange[kassaNummer].first();
