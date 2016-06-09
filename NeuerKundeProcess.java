@@ -37,7 +37,7 @@ public class NeuerKundeProcess extends SimProcess {
 	     
 	            //TODO: zeitabhängig mehr oder weniger Kunden erzeugen!
 	            // neue Kunden erzeugen
-	            for(int i = 0; i < (int) (Math.random() * 5); i++)
+	            for(int i = 0; i < (int) (Math.random() * 15); i++)
 	            {
 	            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 	        	    

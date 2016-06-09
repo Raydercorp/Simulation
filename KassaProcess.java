@@ -1,12 +1,14 @@
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.SimProcess;
+import desmoj.core.simulator.TimeInstant;
 import desmoj.core.simulator.TimeSpan;
 
 public class KassaProcess extends SimProcess
 {
 	private int maxArtikelAufBand = 150;
 	private int kassaNummer;
+	private TimeInstant passivate;
 	
 	private Supermarkt_Model meinModel;
 	
@@ -25,9 +27,8 @@ public class KassaProcess extends SimProcess
             // kein Kunde wartet
             if (meinModel.kassenWarteschlange[kassaNummer].isEmpty())
             {
-                if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].maxWaitTime().compareTo(new TimeSpan(meinModel.getKassaSchliessen())) >= 0)
+                if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].length() == 0 && passivate != null && (meinModel.kassa[kassaNummer].presentTime().getTimeAsDouble() - passivate.getTimeAsDouble()) >= meinModel.getKassaSchliessen())
                 {
-                	//TODO: Kassa, -warteschlange löschen!
                 	meinModel.kassenWarteschlange[kassaNummer].reset();
             		meinModel.setAktuelleMaxKunden(meinModel.getAktuelleMaxKunden() - meinModel.getMaxKunden());
             		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() - 1);
@@ -39,6 +40,8 @@ public class KassaProcess extends SimProcess
 
                 // Kassa in entsprechende WS
                 meinModel.freieKassaQueue.insert(this);
+                
+                passivate = meinModel.kassa[kassaNummer].presentTime();
                     
                 // abwarten weiterer Aktionen
                 passivate();

@@ -77,7 +77,7 @@ public class KundenProcess extends SimProcess {
         
         for(int i = 0; i < meinModel.getAktiveKassenAnzahl(); i++)
         {
-	        sendTraceNote("Laenge der Kundenreihe: " + 
+	        sendTraceNote("Laenge der Kundenreihe " + (i + 1) + ": " + 
 	            meinModel.kassenWarteschlange[i].length());
         }
 
