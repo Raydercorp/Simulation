@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Random;
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.SimProcess;
@@ -72,7 +75,63 @@ public class KassaProcess extends SimProcess
                     		// Kassaprozess starten (= "Kassa wird eroeffnet")
             				meinModel.kassa[i].activate(new TimeSpan(meinModel.getKassaOeffnetZeit()));
             				
-            				//TODO: Kassa wechsel
+            				//Kunden die keine Artikel aufs Band gelegt haben können die WS wechseln
+            				ArrayList<KundenProcess> kunden = new ArrayList<>();
+            				
+            				for(int j = 0; j < meinModel.kassa.length; j++)
+            				{
+            					for(int k = 0; k < meinModel.kassenWarteschlange[j].length(); k++)
+            					{
+            						if(!meinModel.kassenWarteschlange[j].get(k).getAufgelegt())
+            						{
+            							kunden.add(meinModel.kassenWarteschlange[j].get(k));
+            						}
+            					}
+            				}
+            				
+            				//Randomize Kunden
+            				shuffle(kunden);
+            				
+            				for(int j = 0; j < kunden.size(); j++)
+            				{
+            					KundenProcess kunde = kunden.get(j);
+            					int startKassa = -1;
+            					
+            					int minIndex = KassaAuswahl.besteKassa(meinModel);
+            					
+            					//Kunde wechselt nicht zur gleichen Kassa!
+            					if(minIndex == kassaNummer)
+            					{
+            						continue;
+            					}
+
+                				//Kunden wechseln mit 50% Wahrscheinlichkeit die WS
+            			        if(Math.random() <= 0.5)
+            			        {
+            			        	for(int k = 0; k < meinModel.kassa.length; k++)
+            			        	{
+            			        		//Aus alter WS entfernen
+            			        		if(meinModel.kassenWarteschlange[k].contains(kunde))
+            			        		{
+            			        			meinModel.kassenWarteschlange[k].remove(kunde);
+            			        			startKassa = k + 1;
+            			        			break;
+            			        		}
+            			        	}
+
+            			        	//Kunde zu neuer Kassa hinzufügen
+                					minIndex = KassaAuswahl.besteKassa(meinModel);
+            			        	meinModel.kassenWarteschlange[minIndex].insert(kunde);
+            			        	
+            			        	//Kann der Kunde nun Artikel aufs Band legen?
+            			        	if(KassaAuswahl.getArtikel()[minIndex] < meinModel.kassa[minIndex].getMaxArtikelAufBand())
+            			            {
+            			        		kunde.setAufgelegt(true);
+            			            }
+            			        	
+            			        	sendTraceNote(kunde + " wechselt von Kassa " + startKassa + " zu Kassa " + (minIndex + 1) + " und kann Artikel auflegen? " + kunde.getAufgelegt());
+            			        }
+            				}
             				
             				break;
             			}
@@ -130,5 +189,19 @@ public class KassaProcess extends SimProcess
 	public int getMaxArtikelAufBand()
 	{
 		return maxArtikelAufBand;
+	}
+	
+	private void shuffle (ArrayList<KundenProcess> a)
+	{
+		Random rand = new Random();
+		
+	    int n = a.size();
+	    while (n > 1)
+	    {
+	        int k = rand.nextInt(n--); //decrements after using the value
+	        KundenProcess temp = a.get(n);
+	        a.set(n, a.get(k));
+	        a.set(k, temp);
+	    }
 	}
 }
