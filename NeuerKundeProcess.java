@@ -31,7 +31,16 @@ public class NeuerKundeProcess extends SimProcess {
 	            hold (new TimeSpan(meinModel.getKundenAnkunftsZeit()));
 	     
 	            //TODO: zeitabhängig mehr oder weniger Kunden erzeugen!
+	            // -- Drei Tageszeiten hinzugefuegt mit folgenden spawnchancen, Morgen(15), Mittag(30) und Abend(25) 
+	            
 	            // neue Kunden erzeugen
+	            //
+	            if((meinModel.presentTime().compareTo(new TimeInstant(1)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(180)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(1+690)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(180+690)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(1+690*2)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(180+690*2)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(1+690*3)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(180+690*3)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(1+690*4)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(180+690*4)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(1+690*5)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(180+690*5)) <= 0)){
 	            for(int i = 0; i < (int) (Math.random() * 15); i++)
 	            {
 	            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
@@ -40,6 +49,37 @@ public class NeuerKundeProcess extends SimProcess {
 		            //  soll unmittelbar nach diesem Generator-Ereignis geschehen
 		            neuerKunde.activateAfter(this);
 	            }
+	            }
+	            
+	            if((meinModel.presentTime().compareTo(new TimeInstant(181)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(450)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(181+690)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(450+690)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(181+690*2)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(450+690*2)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(181+690*3)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(450+690*3)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(181+690*4)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(450+690*4)) <= 0)||
+	               (meinModel.presentTime().compareTo(new TimeInstant(181+690*5)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(450+690*5)) <= 0)){
+		            for(int i = 0; i < (int) (Math.random() * 30); i++)
+		            {
+		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
+		        	    
+		
+			            neuerKunde.activateAfter(this);
+		            }
+		            }
+	            
+	            if((meinModel.presentTime().compareTo(new TimeInstant(451)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(451+690)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690+690)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(451+690*2)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690+690*2)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(451+690*3)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690+690*3)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(451+690*4)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690+690*4)) <= 0) ||
+	               (meinModel.presentTime().compareTo(new TimeInstant(451+690*5)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690+690*5)) <= 0)){
+		            for(int i = 0; i < (int) (Math.random() * 10); i++)
+		            {
+		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
+		        	    
+		
+			            neuerKunde.activateAfter(this);
+		            }
+		            } 
         	}
         	else
         	{
