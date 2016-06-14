@@ -2,7 +2,7 @@ import desmoj.core.simulator.*;
 import co.paralleluniverse.fibers.SuspendExecution;
 
 // stellt die Erscheinung eines neuen Kunden im System dar - als Prozess realisiert
-// -> Beschreibung der Aktionen für einen neue Kundenankunft
+// -> Beschreibung der Aktionen fÃ¼r einen neue Kundenankunft
 public class NeuerKundeProcess extends SimProcess {
 
     // nuetzliche Referenz auf entsprechendes Modell
@@ -30,8 +30,8 @@ public class NeuerKundeProcess extends SimProcess {
         		// Prozess deaktivieren bis naechster Kunde erzeugt werden soll
 	            hold (new TimeSpan(meinModel.getKundenAnkunftsZeit()));
 	     
-	            //TODO: zeitabh�ngig mehr oder weniger Kunden erzeugen!
-	            // -- Drei Tageszeiten hinzugefuegt mit folgenden spawnchancen, Morgen(15), Mittag(30) und Abend(25) 
+	            //TODO: zeitabhängig mehr oder weniger Kunden erzeugen! 
+	            // -- Drei Tageszeiten hinzugefuegt mit folgenden spawnchancen, Morgen(15), Mittag(30) und Abend(20) 
 	            
 	            // neue Kunden erzeugen
 	            //
@@ -83,7 +83,7 @@ public class NeuerKundeProcess extends SimProcess {
         	}
         	else
         	{
-        		//N�chster Kunde kommt erst am n�chsten morgen
+        		//Nächster Kunde kommt erst am nächsten morgen
         		if(meinModel.presentTime().compareTo(new TimeInstant(660)) >= 0 && meinModel.presentTime().compareTo(new TimeInstant(690)) <= 0)
         		{
             		hold (new TimeSpan(690 - meinModel.presentTime().getTimeTruncated() + meinModel.getKundenAnkunftsZeit()));
