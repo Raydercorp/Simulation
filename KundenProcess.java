@@ -19,12 +19,37 @@ public class KundenProcess extends SimProcess {
 
         meinModel = (Supermarkt_Model) owner;
         
-        //TODO: Zeitabhängig ändern
-        getNormaleArtikelAnzahl();
+        // 0 = Morgen, 1 = Mittag, 2 = Abend, 3 = Wochenende Morgen, 4 = Wochenende Mittag, 5 = Wochenende Abend
+        int ankunftsZeit = KundenAnkunft.getKundenAnkunft(meinModel);
+        
+        if(ankunftsZeit == 0)
+        {
+        	getMorgenArtikelAnzahl();
+        }
+        else if(ankunftsZeit == 1)
+        {
+        	getMittagArtikelAnzahl();
+        }
+        else if(ankunftsZeit == 2)
+        {
+        	getAbendArtikelAnzahl();
+        }
+        else if(ankunftsZeit == 3)
+        {
+        	getWochenendeMorgenArtikelAnzahl();
+        }
+        else if(ankunftsZeit == 4)
+        {
+        	getWochenendeMittagArtikelAnzahl();
+        }
+        else
+        {
+        	getWochenendeAbendArtikelAnzahl();
+        }
     }
 
-    
-    // Beschreibung der Aktionen des Kunden vom Eintreffen bis zum Verlassen
+
+	// Beschreibung der Aktionen des Kunden vom Eintreffen bis zum Verlassen
     //   des Schalters 
     public void lifeCycle() throws SuspendExecution{
 
@@ -82,17 +107,17 @@ public class KundenProcess extends SimProcess {
     	this.aufgelegt = aufgelegt;
     }
     
-    private void getNormaleArtikelAnzahl()
+    private void getMorgenArtikelAnzahl()
     {
         double rand = Math.random();
         
         if(rand <= 0.5)
         {
-        	artikel = (int) meinModel.getMittlererEinkauf();
-        }
-        else if(rand > 0.5 && rand <= 0.7)
-        {
         	artikel = (int) meinModel.getKleinerEinkauf();
+        }
+        else if(rand > 0.5 && rand <= 0.8)
+        {
+        	artikel = (int) meinModel.getMittlererEinkauf();
         }
         else
         {
@@ -104,13 +129,13 @@ public class KundenProcess extends SimProcess {
     {
         double rand = Math.random();
         
-        if(rand <= 0.3)
-        {
-        	artikel = (int) meinModel.getMittlererEinkauf();
-        }
-        else if(rand > 0.3 && rand <= 0.9)
+        if(rand <= 0.5)
         {
         	artikel = (int) meinModel.getKleinerEinkauf();
+        }
+        else if(rand > 0.5 && rand <= 0.9)
+        {
+        	artikel = (int) meinModel.getMittlererEinkauf();
         }
         else
         {
@@ -118,21 +143,75 @@ public class KundenProcess extends SimProcess {
         }
     }
     
-    private void getWochenendeArtikelAnzahl()
+    private void getAbendArtikelAnzahl()
     {
         double rand = Math.random();
         
-        if(rand <= 0.35)
-        {
-        	artikel = (int) meinModel.getMittlererEinkauf();
-        }
-        else if(rand > 0.35 && rand <= 0.45)
+        if(rand <= 0.2)
         {
         	artikel = (int) meinModel.getKleinerEinkauf();
+        }
+        else if(rand > 0.2 && rand <= 0.4)
+        {
+        	artikel = (int) meinModel.getMittlererEinkauf();
         }
         else
         {
         	artikel = (int) meinModel.getGrosserEinkauf();
         }
     }
+
+    private void getWochenendeMorgenArtikelAnzahl()
+    {
+        double rand = Math.random();
+        
+        if(rand <= 0.2)
+        {
+        	artikel = (int) meinModel.getKleinerEinkauf();
+        }
+        else if(rand > 0.2 && rand <= 0.5)
+        {
+        	artikel = (int) meinModel.getMittlererEinkauf();
+        }
+        else
+        {
+        	artikel = (int) meinModel.getGrosserEinkauf();
+        }
+	}
+
+    private void getWochenendeMittagArtikelAnzahl()
+    {
+        double rand = Math.random();
+        
+        if(rand <= 0.1)
+        {
+        	artikel = (int) meinModel.getKleinerEinkauf();
+        }
+        else if(rand > 0.1 && rand <= 0.35)
+        {
+        	artikel = (int) meinModel.getMittlererEinkauf();
+        }
+        else
+        {
+        	artikel = (int) meinModel.getGrosserEinkauf();
+        }
+	}
+
+    private void getWochenendeAbendArtikelAnzahl()
+    {
+        double rand = Math.random();
+        
+        if(rand <= 0.15)
+        {
+        	artikel = (int) meinModel.getKleinerEinkauf();
+        }
+        else if(rand > 0.15 && rand <= 0.35)
+        {
+        	artikel = (int) meinModel.getMittlererEinkauf();
+        }
+        else
+        {
+        	artikel = (int) meinModel.getGrosserEinkauf();
+        }
+	}
 }
