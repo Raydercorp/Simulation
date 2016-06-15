@@ -109,7 +109,7 @@ public class KundenProcess extends SimProcess {
     
     private void getMorgenArtikelAnzahl()
     {
-        double rand = Math.random();
+        double rand = meinModel.getRandom();
         
         if(rand <= 0.5)
         {
@@ -127,7 +127,7 @@ public class KundenProcess extends SimProcess {
     
     private void getMittagArtikelAnzahl()
     {
-        double rand = Math.random();
+        double rand = meinModel.getRandom();
         
         if(rand <= 0.5)
         {
@@ -145,7 +145,7 @@ public class KundenProcess extends SimProcess {
     
     private void getAbendArtikelAnzahl()
     {
-        double rand = Math.random();
+        double rand = meinModel.getRandom();
         
         if(rand <= 0.2)
         {
@@ -163,7 +163,7 @@ public class KundenProcess extends SimProcess {
 
     private void getWochenendeMorgenArtikelAnzahl()
     {
-        double rand = Math.random();
+        double rand = meinModel.getRandom();
         
         if(rand <= 0.2)
         {
@@ -181,7 +181,7 @@ public class KundenProcess extends SimProcess {
 
     private void getWochenendeMittagArtikelAnzahl()
     {
-        double rand = Math.random();
+        double rand = meinModel.getRandom();
         
         if(rand <= 0.1)
         {
@@ -199,7 +199,7 @@ public class KundenProcess extends SimProcess {
 
     private void getWochenendeAbendArtikelAnzahl()
     {
-        double rand = Math.random();
+        double rand = meinModel.getRandom();
         
         if(rand <= 0.15)
         {

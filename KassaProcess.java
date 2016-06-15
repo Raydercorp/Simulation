@@ -106,7 +106,7 @@ public class KassaProcess extends SimProcess
             					}
 
                 				//Kunden wechseln mit 50% Wahrscheinlichkeit die WS
-            			        if(Math.random() <= 0.5)
+            			        if(meinModel.getRandom() <= 0.5)
             			        {
             			        	for(int k = 0; k < meinModel.kassa.length; k++)
             			        	{
@@ -155,7 +155,7 @@ public class KassaProcess extends SimProcess
                 for(int i = 0; i < kunde.getArtikelAnzahl(); i++)
                 {
                 	//0,1% der Artikel können nicht gescannt werden
-                	if(Math.random() <= 0.001)
+                	if(meinModel.getRandom() <= 0.001)
                 	{
                 		//zwischen 4 und 7 sekunden zum eintippen
                 		hold(new TimeSpan(1 / 60 * meinModel.getEintippZeit()));
@@ -163,7 +163,7 @@ public class KassaProcess extends SimProcess
                 }
                 
                 //Kunde bezahlt 60% bar und 40% mit karte; bar zahlen geht etwas schneller, allerdings in einem größeren intervall
-                if(Math.random() <= 0.6)
+                if(meinModel.getRandom() <= 0.6)
                 {
                 	//Bar zahlen dauert zwischen 10 und 20 sekunden
                 	hold(new TimeSpan(1 / 60 * meinModel.getBarBezahlZeit()));
@@ -192,13 +192,11 @@ public class KassaProcess extends SimProcess
 	}
 	
 	private void shuffle (ArrayList<KundenProcess> a)
-	{
-		Random rand = new Random();
-		
+	{		
 	    int n = a.size();
 	    while (n > 1)
 	    {
-	        int k = rand.nextInt(n--); //decrements after using the value
+	        int k = meinModel.getShuffle(n--); //decrements after using the value
 	        KundenProcess temp = a.get(n);
 	        a.set(n, a.get(k));
 	        a.set(k, temp);

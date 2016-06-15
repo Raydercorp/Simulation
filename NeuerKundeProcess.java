@@ -38,7 +38,7 @@ public class NeuerKundeProcess extends SimProcess {
 	            
 	            if(ankunftsZeit == 0)
 	            {
-		            for(int i = 0; i < (int) (Math.random() * 15); i++)
+		            for(int i = 0; i < meinModel.getAnzahlKundenMorgen(); i++)
 		            {
 		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 		        	    
@@ -49,7 +49,7 @@ public class NeuerKundeProcess extends SimProcess {
 	            }
 	            else if(ankunftsZeit == 1)
 	            {
-		            for(int i = 0; i < (int) (Math.random() * 30); i++)
+		            for(int i = 0; i < meinModel.getAnzahlKundenMittag(); i++)
 		            {
 		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 		
@@ -58,7 +58,7 @@ public class NeuerKundeProcess extends SimProcess {
 		        }
 	            else if(ankunftsZeit == 2)
 	            {
-		            for(int i = 0; i < (int) (Math.random() * 20); i++)
+		            for(int i = 0; i < meinModel.getAnzahlKundenAbend(); i++)
 		            {
 		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 		        	    
@@ -67,7 +67,7 @@ public class NeuerKundeProcess extends SimProcess {
 		        }
 	            else if(ankunftsZeit == 3)
 	            {
-	            	for(int i = 0; i < (int) (Math.random() * 20); i++)
+	            	for(int i = 0; i < meinModel.getAnzahlKundenWochenendeMorgen(); i++)
 		            {
 		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 		        	    
@@ -76,7 +76,7 @@ public class NeuerKundeProcess extends SimProcess {
 	            }
 	            else if(ankunftsZeit == 4)
 	            {
-	            	for(int i = 0; i < (int) (Math.random() * 40); i++)
+	            	for(int i = 0; i < meinModel.getAnzahlKundenWochenendeMittag(); i++)
 		            {
 		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 		        	    
@@ -85,7 +85,7 @@ public class NeuerKundeProcess extends SimProcess {
 	            }
 	            else
 	            {
-	            	for(int i = 0; i < (int) (Math.random() * 15); i++)
+	            	for(int i = 0; i < meinModel.getAnzahlKundenWochenendeAbend(); i++)
 		            {
 		            	KundenProcess neuerKunde = new KundenProcess (meinModel, "Kunde", true);
 		        	    
