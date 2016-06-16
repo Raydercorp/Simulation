@@ -31,43 +31,43 @@ public class Supermarkt_Model extends Model
 	private ContDistUniform anzahlKundenMorgen;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
-    public double getAnzahlKundenMorgen() {
-	   return anzahlKundenMorgen.sample();
+    public int getAnzahlKundenMorgen() {
+	   return (int) Math.floor(anzahlKundenMorgen.sample());
     }
     
 	private ContDistUniform anzahlKundenMittag;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
-    public double getAnzahlKundenMittag() {
-	   return anzahlKundenMittag.sample();
+    public int getAnzahlKundenMittag() {
+	   return (int) Math.floor(anzahlKundenMittag.sample());
     }
     
 	private ContDistUniform anzahlKundenAbend;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
-    public double getAnzahlKundenAbend() {
-	   return anzahlKundenAbend.sample();
+    public int getAnzahlKundenAbend() {
+	   return (int) Math.floor(anzahlKundenAbend.sample());
     }
     
 	private ContDistUniform anzahlKundenWochenendeMorgen;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
-    public double getAnzahlKundenWochenendeMorgen() {
-	   return anzahlKundenWochenendeMorgen.sample();
+    public int getAnzahlKundenWochenendeMorgen() {
+	   return (int) Math.floor(anzahlKundenWochenendeMorgen.sample());
     }
     
 	private ContDistUniform anzahlKundenWochenendeMittag;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
-    public double getAnzahlKundenWochenendeMittag() {
-	   return anzahlKundenWochenendeMittag.sample();
+    public int getAnzahlKundenWochenendeMittag() {
+	   return (int) Math.floor(anzahlKundenWochenendeMittag.sample());
     }
     
 	private ContDistUniform anzahlKundenWochenendeAbend;
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
-    public double getAnzahlKundenWochenendeAbend() {
-	   return anzahlKundenWochenendeAbend.sample();
+    public int getAnzahlKundenWochenendeAbend() {
+	   return (int) Math.floor(anzahlKundenWochenendeAbend.sample());
     }
     
 	// Zufallszahlengenerator für Kassa öffnet zeit
@@ -198,6 +198,26 @@ public class Supermarkt_Model extends Model
 		this.aktiveKassenAnzahl = aktiveKassenAnzahl;
 	}
 	
+	//Kassa kosten pro minute, Insgesamt
+	private double kassaKostenProMinute;
+	
+	public double getKassaKostenProMinute()
+	{
+		return kassaKostenProMinute;
+	}
+	
+	private double kassaKosten;
+	
+	public double getKassaKosten()
+	{
+		return kassaKosten;
+	}
+	
+	public void setKassaKosten(double kassaKosten)
+	{
+		this.kassaKosten = kassaKosten;
+	}
+	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
 	{
@@ -224,11 +244,12 @@ public class Supermarkt_Model extends Model
         
 		// Eine Kassa öffnen
 		kassa[0] = new KassaProcess(this, "Kassa 1", true);
-		
+
 		kassa[0].setKassaNummer(0);
 		
 		// Kassaprozess starten (= "Kassa wird eroeffnet")
 		kassa[0].activate(new TimeSpan(0.0));
+		kassa[0].setKassaStartzeit(new TimeSpan(0.0));
     }
 
 	public void init()
@@ -238,15 +259,15 @@ public class Supermarkt_Model extends Model
 		kundenAnkunftsZeit.setNonNegative(true);
 		
 		//KundenAnzahl initialisieren
-		anzahlKundenMorgen = new ContDistUniform(this, "Kundenanzahl Morgen", 0, 1, true, true);
-		anzahlKundenMittag = new ContDistUniform(this, "Kundenanzahl Mittag", 0, 3, true, true);
-		anzahlKundenAbend = new ContDistUniform(this, "Kundenanzahl Abend", 0, 2, true, true);
-		anzahlKundenWochenendeMorgen = new ContDistUniform(this, "Kundenanzahl Wochenende Morgen", 0, 2, true, true);
-		anzahlKundenWochenendeMittag = new ContDistUniform(this, "Kundenanzahl Wochenende Mittag", 0, 4, true, true);
-		anzahlKundenWochenendeAbend = new ContDistUniform(this, "Kundenanzahl Wochenende Abend", 0, 3, true, true);
+		anzahlKundenMorgen = new ContDistUniform(this, "Kundenanzahl Morgen", 0, 3, true, true);
+		anzahlKundenMittag = new ContDistUniform(this, "Kundenanzahl Mittag", 0, 5, true, true);
+		anzahlKundenAbend = new ContDistUniform(this, "Kundenanzahl Abend", 0, 4, true, true);
+		anzahlKundenWochenendeMorgen = new ContDistUniform(this, "Kundenanzahl Wochenende Morgen", 0, 4, true, true);
+		anzahlKundenWochenendeMittag = new ContDistUniform(this, "Kundenanzahl Wochenende Mittag", 0, 6, true, true);
+		anzahlKundenWochenendeAbend = new ContDistUniform(this, "Kundenanzahl Wochenende Abend", 0, 5, true, true);
 		
 		//Kassa öffnet zeiten initialisieren
-		kassaOeffnetZeit = new ContDistUniform(this, "Kassa öffnet Zeit", 1.5, 3.0, true, true);	
+		kassaOeffnetZeit = new ContDistUniform(this, "Kassa öffnet Zeit", 0.5, 2.0, true, true);	
 		kassaOeffnetZeit.setNonNegative(true);
 		
 		//Einkauf initialisieren
@@ -286,6 +307,10 @@ public class Supermarkt_Model extends Model
     	
     	//Zeit
     	kassaSchliessen = 0.5;
+    	
+    	//Kassa kosten pro minute (Lohn + Betriebskosten; Schätzung)
+    	kassaKostenProMinute = (12 + 5) / 60.0;
+    	kassaKosten = 0;
 	}
 	
 	public static void main(String[] args)
@@ -299,6 +324,18 @@ public class Supermarkt_Model extends Model
 		
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6
 		supermarktExperiment.start();
+
+		for(int i = 0; i < supermarktModel.kassa.length; i++)
+		{
+			if(supermarktModel.kassa[i] != null)
+			{
+				double laufZeit = supermarktModel.presentTime().getTimeAsDouble() - supermarktModel.kassa[i].getKassaStartzeit().getTimeAsDouble();
+				supermarktModel.setKassaKosten(supermarktModel.getKassaKosten() + laufZeit * supermarktModel.getKassaKostenProMinute());
+			}
+		}
+		
+		System.out.println(supermarktModel.getKassaKosten());
+		
 		supermarktExperiment.report();
 		supermarktExperiment.finish();
 	}
