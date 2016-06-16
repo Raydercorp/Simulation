@@ -145,7 +145,7 @@ public class Supermarkt_Model extends Model
 
 	// liefert eine Zufallszahl für normale Kundenankunftszeit
     public int getShuffle(int n) {
-    	shuffle = new ContDistUniform(this, "Shuffle", 0, n - 1, true, true);
+    	shuffle = new ContDistUniform(this, "Shuffle", 0, n - 1, false, false);
     	return (int) Math.ceil(shuffle.sample());
     }
     
@@ -234,16 +234,16 @@ public class Supermarkt_Model extends Model
 	public void init()
 	{
 		//Ankunftszeiten initialisieren
-		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 3.0, true, true);
+		kundenAnkunftsZeit = new ContDistExponential(this, "Kunden Ankunftszeitintervall", 1.0, true, true);
 		kundenAnkunftsZeit.setNonNegative(true);
 		
 		//KundenAnzahl initialisieren
-		anzahlKundenMorgen = new ContDistUniform(this, "Kundenanzahl Morgen", 1, 5, true, true);
-		anzahlKundenMittag = new ContDistUniform(this, "Kundenanzahl Mittag", 1, 20, true, true);
-		anzahlKundenAbend = new ContDistUniform(this, "Kundenanzahl Abend", 1, 12, true, true);
-		anzahlKundenWochenendeMorgen = new ContDistUniform(this, "Kundenanzahl Wochenende Morgen", 1, 12, true, true);
-		anzahlKundenWochenendeMittag = new ContDistUniform(this, "Kundenanzahl Wochenende Mittag", 1, 30, true, true);
-		anzahlKundenWochenendeAbend = new ContDistUniform(this, "Kundenanzahl Wochenende Abend", 1, 5, true, true);
+		anzahlKundenMorgen = new ContDistUniform(this, "Kundenanzahl Morgen", 0, 1, true, true);
+		anzahlKundenMittag = new ContDistUniform(this, "Kundenanzahl Mittag", 0, 3, true, true);
+		anzahlKundenAbend = new ContDistUniform(this, "Kundenanzahl Abend", 0, 2, true, true);
+		anzahlKundenWochenendeMorgen = new ContDistUniform(this, "Kundenanzahl Wochenende Morgen", 0, 2, true, true);
+		anzahlKundenWochenendeMittag = new ContDistUniform(this, "Kundenanzahl Wochenende Mittag", 0, 4, true, true);
+		anzahlKundenWochenendeAbend = new ContDistUniform(this, "Kundenanzahl Wochenende Abend", 0, 3, true, true);
 		
 		//Kassa öffnet zeiten initialisieren
 		kassaOeffnetZeit = new ContDistUniform(this, "Kassa öffnet Zeit", 1.5, 3.0, true, true);	
@@ -264,7 +264,7 @@ public class Supermarkt_Model extends Model
 		barBezahlZeit = new ContDistUniform(this, "Bezahlzeit mit Bargeld in sekunden", 10, 20, true, true);
 		karteBezahlZeit = new ContDistUniform(this, "Bezahlzeit mit Karte in sekunden", 18, 22, true, true);
 		
-		random = new ContDistUniform(this, "Randomwert", 0, 1, true, true);
+		random = new ContDistUniform(this, "Randomwert", 0, 1, true, false);
 		
 		//Kassen, -Warteschlange initialisieren
 		maxKassenAnzahl = 4;
@@ -278,7 +278,7 @@ public class Supermarkt_Model extends Model
 		}
 		
 		//Freie Kassa Warteschlange
-    	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS",true, true);
+    	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS", true, true);
     	
     	//Maximale Anzahl an Kunden
     	maxKunden = 7;
@@ -294,7 +294,7 @@ public class Supermarkt_Model extends Model
 		Supermarkt_Model supermarktModel = new Supermarkt_Model(null, "Supermarkt Model", true, true);
 		supermarktModel.connectToExperiment(supermarktExperiment);
 		
-		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(700));
+		supermarktExperiment.tracePeriod(new TimeInstant(0.0), new TimeInstant(690));
 		supermarktExperiment.debugPeriod(new TimeInstant(0.0), new TimeInstant(60));
 		
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6

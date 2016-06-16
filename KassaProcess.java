@@ -1,15 +1,14 @@
 import java.util.ArrayList;
-import java.util.Random;
-
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.Model;
+import desmoj.core.simulator.ProcessQueue;
 import desmoj.core.simulator.SimProcess;
 import desmoj.core.simulator.TimeInstant;
 import desmoj.core.simulator.TimeSpan;
 
 public class KassaProcess extends SimProcess
 {
-	private int maxArtikelAufBand = 150;
+	private int maxArtikelAufBand = 100;
 	private int kassaNummer;
 	private TimeInstant passivateTime;
 	
@@ -95,12 +94,29 @@ public class KassaProcess extends SimProcess
             				for(int j = 0; j < kunden.size(); j++)
             				{
             					KundenProcess kunde = kunden.get(j);
+            					ProcessQueue<KundenProcess> test = new ProcessQueue<>(meinModel, "test", false, false);
             					int startKassa = -1;
             					
-            					int minIndex = KassaAuswahl.besteKassa(meinModel);
+            					for(int k = 0; k < meinModel.kassa.length; k++)
+        			        	{
+        			        		if(meinModel.kassenWarteschlange[k].contains(kunde))
+        			        		{
+        			        			startKassa = k;
+        			        			break;
+        			        		}
+        			        	}
+            					
+            					for(KundenProcess k : meinModel.kassenWarteschlange[startKassa])
+            					{
+	            					test.insert(k);
+            					}
+            					
+            					test.remove(kunde);
+            					
+            					int minIndex = KassaAuswahl.besteKassa(meinModel, startKassa, test);
             					
             					//Kunde wechselt nicht zur gleichen Kassa!
-            					if(minIndex == kassaNummer)
+            					if(minIndex == startKassa)
             					{
             						continue;
             					}
@@ -108,19 +124,10 @@ public class KassaProcess extends SimProcess
                 				//Kunden wechseln mit 50% Wahrscheinlichkeit die WS
             			        if(meinModel.getRandom() <= 0.5)
             			        {
-            			        	for(int k = 0; k < meinModel.kassa.length; k++)
-            			        	{
-            			        		//Aus alter WS entfernen
-            			        		if(meinModel.kassenWarteschlange[k].contains(kunde))
-            			        		{
-            			        			meinModel.kassenWarteschlange[k].remove(kunde);
-            			        			startKassa = k + 1;
-            			        			break;
-            			        		}
-            			        	}
-
+            			        	meinModel.kassenWarteschlange[startKassa].remove(kunde);
+            			        	startKassa++;
+            			        	
             			        	//Kunde zu neuer Kassa hinzufügen
-                					minIndex = KassaAuswahl.besteKassa(meinModel);
             			        	meinModel.kassenWarteschlange[minIndex].insert(kunde);
             			        	
             			        	//Kann der Kunde nun Artikel aufs Band legen?
