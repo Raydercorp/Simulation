@@ -158,6 +158,12 @@ public class KassaProcess extends SimProcess
                 
                 // ersten Kunden aus WS entfernen
                 KundenProcess kunde = meinModel.kassenWarteschlange[kassaNummer].first();
+                
+            	if(kunde == null)
+            	{
+            		continue;
+            	}
+            	
                 meinModel.kassenWarteschlange[kassaNummer].remove(kunde);
                 
                 // Artikel werden gescannt

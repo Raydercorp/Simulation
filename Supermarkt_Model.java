@@ -294,11 +294,11 @@ public class Supermarkt_Model extends Model
     	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS", true, true);
     	
     	//Maximale Anzahl an Kunden
-    	maxKunden = 10;
+    	maxKunden = 5;
     	aktuelleMaxKunden = maxKunden;
     	
     	//Zeit
-    	kassaSchliessen = 0.1;
+    	kassaSchliessen = 0.5;
     	
     	//Kassa kosten pro minute (Lohn + Betriebskosten; Schätzung)
     	kassaKostenProMinute = (12 + 5) / 60.0;
