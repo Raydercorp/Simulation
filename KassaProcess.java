@@ -39,9 +39,8 @@ public class KassaProcess extends SimProcess
                 	sendTraceNote("Kassa: " + (kassaNummer + 1) + " schlieﬂt!");
                 	meinModel.kassa[kassaNummer] = null;
                 	
-                	//TODO: Kassa kosten aktualisieren.
                 	double laufZeit = meinModel.presentTime().getTimeAsDouble() - kassaStartzeit.getTimeAsDouble();
-                	meinModel.setKassaKosten((laufZeit * meinModel.getKassaKostenProMinute()) + meinModel.getKassaKosten());
+                	meinModel.kassaKosten.update((long) (laufZeit * meinModel.getKassaKostenProMinute()));
                 	return;
                 }
 

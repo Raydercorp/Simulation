@@ -5,6 +5,8 @@ import desmoj.core.simulator.Model;
 import desmoj.core.simulator.ProcessQueue;
 import desmoj.core.simulator.TimeInstant;
 import desmoj.core.simulator.TimeSpan;
+import desmoj.core.statistic.Count;
+import desmoj.core.statistic.TimeSeries;
 
 /*
 Ein Supermarkt hat n Kassen.
@@ -205,18 +207,8 @@ public class Supermarkt_Model extends Model
 	{
 		return kassaKostenProMinute;
 	}
-	
-	private double kassaKosten;
-	
-	public double getKassaKosten()
-	{
-		return kassaKosten;
-	}
-	
-	public void setKassaKosten(double kassaKosten)
-	{
-		this.kassaKosten = kassaKosten;
-	}
+
+	protected Count kassaKosten;
 	
 	//Konstruktur
 	public Supermarkt_Model(Model owner, String name, boolean showInReport, boolean showInTrace)
@@ -302,15 +294,15 @@ public class Supermarkt_Model extends Model
     	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS", true, true);
     	
     	//Maximale Anzahl an Kunden
-    	maxKunden = 7;
+    	maxKunden = 10;
     	aktuelleMaxKunden = maxKunden;
     	
     	//Zeit
-    	kassaSchliessen = 0.5;
+    	kassaSchliessen = 0.1;
     	
     	//Kassa kosten pro minute (Lohn + Betriebskosten; Schätzung)
     	kassaKostenProMinute = (12 + 5) / 60.0;
-    	kassaKosten = 0;
+    	kassaKosten = new Count(this, "Kassakosten", true, true);
 	}
 	
 	public static void main(String[] args)
@@ -330,11 +322,11 @@ public class Supermarkt_Model extends Model
 			if(supermarktModel.kassa[i] != null)
 			{
 				double laufZeit = supermarktModel.presentTime().getTimeAsDouble() - supermarktModel.kassa[i].getKassaStartzeit().getTimeAsDouble();
-				supermarktModel.setKassaKosten(supermarktModel.getKassaKosten() + laufZeit * supermarktModel.getKassaKostenProMinute());
+				supermarktModel.kassaKosten.update((long) (laufZeit * supermarktModel.getKassaKostenProMinute()));
 			}
 		}
 		
-		System.out.format("Kassakosten für alle Kassen: %.2f€\n", supermarktModel.getKassaKosten());
+		System.out.format("Kassakosten für alle Kassen: %d€\n", supermarktModel.kassaKosten.getValue());
 		
 		supermarktExperiment.report();
 		supermarktExperiment.finish();
