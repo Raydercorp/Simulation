@@ -11,7 +11,7 @@ public class KassaProcess extends SimProcess
 	private int maxArtikelAufBand = 100;
 	private int kassaNummer;
 	private TimeInstant passivateTime;
-	private TimeSpan kassaStartzeit;
+	private TimeInstant kassaStartzeit;
 	
 	private Supermarkt_Model meinModel;
 	
@@ -41,7 +41,7 @@ public class KassaProcess extends SimProcess
                 	
                 	//TODO: Kassa kosten aktualisieren.
                 	double laufZeit = meinModel.presentTime().getTimeAsDouble() - kassaStartzeit.getTimeAsDouble();
-                	meinModel.setKassaKosten(meinModel.getKassaKosten() + laufZeit * meinModel.getKassaKostenProMinute());
+                	meinModel.setKassaKosten((laufZeit * meinModel.getKassaKostenProMinute()) + meinModel.getKassaKosten());
                 	return;
                 }
 
@@ -79,7 +79,7 @@ public class KassaProcess extends SimProcess
                     		// Kassaprozess starten (= "Kassa wird eroeffnet")
             				TimeSpan startZeit = new TimeSpan(meinModel.getKassaOeffnetZeit());
             				meinModel.kassa[i].activate(startZeit);
-            				meinModel.kassa[i].setKassaStartzeit(startZeit);
+            				meinModel.kassa[i].setKassaStartzeit(meinModel.presentTime());
             				
             				//Kunden die keine Artikel aufs Band gelegt haben können die WS wechseln
             				ArrayList<KundenProcess> kunden = new ArrayList<>();
@@ -200,12 +200,12 @@ public class KassaProcess extends SimProcess
 		this.kassaNummer = kassaNummer;
 	}
 	
-	public void setKassaStartzeit(TimeSpan kassaStartzeit)
+	public void setKassaStartzeit(TimeInstant kassaStartzeit)
 	{
 		this.kassaStartzeit = kassaStartzeit;
 	}
 	
-	public TimeSpan getKassaStartzeit()
+	public TimeInstant getKassaStartzeit()
 	{
 		return kassaStartzeit;
 	}
