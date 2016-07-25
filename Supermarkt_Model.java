@@ -294,11 +294,11 @@ public class Supermarkt_Model extends Model
     	freieKassaQueue = new ProcessQueue<KassaProcess>(this, "freie Kassa WS", true, true);
     	
     	//Maximale Anzahl an Kunden
-    	maxKunden = 5;
+    	maxKunden = 10;
     	aktuelleMaxKunden = maxKunden;
     	
     	//Zeit
-    	kassaSchliessen = 0.5;
+    	kassaSchliessen = 1;
     	
     	//Kassa kosten pro minute (Lohn + Betriebskosten; Schätzung)
     	kassaKostenProMinute = (12 + 5) / 60.0;
@@ -317,6 +317,7 @@ public class Supermarkt_Model extends Model
 		supermarktExperiment.stop(new TimeInstant(4140)); //7:30-19:00 * 6
 		supermarktExperiment.start();
 
+		//Alle Kosten für Kassen die am Ende der Simulation noch geöffnet sind aktualisieren
 		for(int i = 0; i < supermarktModel.kassa.length; i++)
 		{
 			if(supermarktModel.kassa[i] != null)
@@ -325,8 +326,6 @@ public class Supermarkt_Model extends Model
 				supermarktModel.kassaKosten.update((long) (laufZeit * supermarktModel.getKassaKostenProMinute()));
 			}
 		}
-		
-		System.out.format("Kassakosten für alle Kassen: %d€\n", supermarktModel.kassaKosten.getValue());
 		
 		supermarktExperiment.report();
 		supermarktExperiment.finish();

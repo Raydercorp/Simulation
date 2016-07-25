@@ -42,7 +42,7 @@ public class KassaAuswahl
 				min = abgeschätzteArtikel[i];
 				minIndex = i;
 			}
-			else if(abgeschätzteArtikel[i] == min)
+			else if(abgeschätzteArtikel[i] == min) //Falls die Klasse gleich ist wird nach der Anzahl der Personen entschieden
 			{
 				if(meinModel.kassenWarteschlange[minIndex].length() > meinModel.kassenWarteschlange[i].length())
 				{
@@ -54,6 +54,7 @@ public class KassaAuswahl
 		return minIndex;
 	}
 	
+	//Fürs Kassa wechseln
 	public static int besteKassa(Supermarkt_Model meinModel, int kassa, ProcessQueue<KundenProcess> test)
 	{	
 		//Artikel pro Kassa WS, diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt

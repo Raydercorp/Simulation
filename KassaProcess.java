@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.ProcessQueue;
 import desmoj.core.simulator.SimProcess;
@@ -29,6 +30,7 @@ public class KassaProcess extends SimProcess
             // kein Kunde wartet
             if (meinModel.kassenWarteschlange[kassaNummer].isEmpty())
             {
+            	//Wenn die Kassa lange genug keine Kunden bedient hat schließt diese (eine Kassa bleibt offen)
                 if(meinModel.getAktiveKassenAnzahl() > 1 && meinModel.kassenWarteschlange[kassaNummer].length() == 0 && passivateTime != null &&
                   (meinModel.kassa[kassaNummer].presentTime().getTimeAsDouble() - passivateTime.getTimeAsDouble()) >= meinModel.getKassaSchliessen())
                 {
@@ -38,6 +40,7 @@ public class KassaProcess extends SimProcess
                 	sendTraceNote("Kassa: " + (kassaNummer + 1) + " schließt!");
                 	meinModel.kassa[kassaNummer] = null;
                 	
+                	//Kassakosten aktualisieren
                 	double laufZeit = meinModel.presentTime().getTimeAsDouble() - kassaStartzeit.getTimeAsDouble();
                 	meinModel.kassaKosten.update((long) (laufZeit * meinModel.getKassaKostenProMinute()));
                 	return;
@@ -46,6 +49,7 @@ public class KassaProcess extends SimProcess
                 // Kassa in entsprechende WS
                 meinModel.freieKassaQueue.insert(this);
                 
+                // Zeitpunkt merken, wenn kein Kunde in der WS ist
                 if(passivateTime == null)
                 {
                 	passivateTime = meinModel.kassa[kassaNummer].presentTime();
@@ -64,6 +68,7 @@ public class KassaProcess extends SimProcess
             		wartendeKunden += meinModel.kassenWarteschlange[i].length();
             	}
             	
+            	//Wenn zu viele Kunden in der WS sind, eine neue Kassa öffnen (solange Kassa vorhanden)
             	if(wartendeKunden >= meinModel.getAktuelleMaxKunden() && meinModel.getAktiveKassenAnzahl() != meinModel.getMaxKassenAnzahl())
             	{
             		// Eine Kassa öffnen
@@ -99,7 +104,7 @@ public class KassaProcess extends SimProcess
             				for(int j = 0; j < kunden.size(); j++)
             				{
             					KundenProcess kunde = kunden.get(j);
-            					ProcessQueue<KundenProcess> test = new ProcessQueue<>(meinModel, "test", false, false);
+            					ProcessQueue<KundenProcess> andereKunden = new ProcessQueue<>(meinModel, "test", false, false);
             					int startKassa = -1;
             					
             					for(int k = 0; k < meinModel.kassa.length; k++)
@@ -113,12 +118,13 @@ public class KassaProcess extends SimProcess
             					
             					for(KundenProcess k : meinModel.kassenWarteschlange[startKassa])
             					{
-	            					test.insert(k);
+            						andereKunden.insert(k);
             					}
             					
-            					test.remove(kunde);
+            					//Kunde bezieht sich selbst bei der Kassawahl nicht ein
+            					andereKunden.remove(kunde);
             					
-            					int minIndex = KassaAuswahl.besteKassa(meinModel, startKassa, test);
+            					int minIndex = KassaAuswahl.besteKassa(meinModel, startKassa, andereKunden);
             					
             					//Kunde wechselt nicht zur gleichen Kassa!
             					if(minIndex == startKassa)
@@ -153,11 +159,13 @@ public class KassaProcess extends SimProcess
             		meinModel.setAktiveKassenAnzahl(meinModel.getAktiveKassenAnzahl() + 1);
             	}
             	
+            	//Ein Kunde ist, bevor die Kassa geschlossen hat, angekommen
             	passivateTime = null;
                 
                 // ersten Kunden aus WS entfernen
                 KundenProcess kunde = meinModel.kassenWarteschlange[kassaNummer].first();
                 
+                //Durchs wechseln der WS können null-Werte entstehen
             	if(kunde == null)
             	{
             		continue;
