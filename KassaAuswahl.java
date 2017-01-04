@@ -6,9 +6,9 @@ public class KassaAuswahl
 	
 	public static int besteKassa(Supermarkt_Model meinModel)
 	{	
-		//Artikel pro Kassa WS, diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
+		//Artikel pro Kassa WS, diese werden dann durch mehrere Mï¿½glichkeiten nur grob abgeschï¿½tzt
 		artikel = new int[meinModel.getMaxKassenAnzahl()];
-		int abgeschätzteArtikel[] = new int[meinModel.getMaxKassenAnzahl()];
+		int abgeschaetzteArtikel[] = new int[meinModel.getMaxKassenAnzahl()];
 		
 		for(int i = 0; i < meinModel.getMaxKassenAnzahl(); i++)
 		{
@@ -28,7 +28,7 @@ public class KassaAuswahl
 		//Klassifizierung
 		for(int i = 0; i < artikel.length; i++)
 		{
-			abgeschätzteArtikel[i] = grobeArtikelAnzahl(artikel[i]);
+			abgeschaetzteArtikel[i] = grobeArtikelAnzahl(artikel[i]);
 		}
 		
 		//Minimum
@@ -37,12 +37,12 @@ public class KassaAuswahl
 		
 		for(int i = 1; i <  artikel.length; i++)
 		{
-			if(abgeschätzteArtikel[i] < min)
+			if(abgeschaetzteArtikel[i] < min)
 			{
-				min = abgeschätzteArtikel[i];
+				min = abgeschaetzteArtikel[i];
 				minIndex = i;
 			}
-			else if(abgeschätzteArtikel[i] == min) //Falls die Klasse gleich ist wird nach der Anzahl der Personen entschieden
+			else if(abgeschaetzteArtikel[i] == min) //Falls die Klasse gleich ist wird nach der Anzahl der Personen entschieden
 			{
 				if(meinModel.kassenWarteschlange[minIndex].length() > meinModel.kassenWarteschlange[i].length())
 				{
@@ -54,12 +54,12 @@ public class KassaAuswahl
 		return minIndex;
 	}
 	
-	//Fürs Kassa wechseln
+	//Fï¿½rs Kassa wechseln
 	public static int besteKassa(Supermarkt_Model meinModel, int kassa, ProcessQueue<KundenProcess> test)
 	{	
-		//Artikel pro Kassa WS, diese werden dann durch mehrere Möglichkeiten nur grob abgeschätzt
+		//Artikel pro Kassa WS, diese werden dann durch mehrere Mï¿½glichkeiten nur grob abgeschï¿½tzt
 		artikel = new int[meinModel.getMaxKassenAnzahl()];
-		int abgeschätzteArtikel[] = new int[meinModel.getMaxKassenAnzahl()];
+		int abgeschaetzteArtikel[] = new int[meinModel.getMaxKassenAnzahl()];
 		
 		for(int i = 0; i < meinModel.getMaxKassenAnzahl(); i++)
 		{
@@ -86,7 +86,7 @@ public class KassaAuswahl
 		//Klassifizierung
 		for(int i = 0; i < artikel.length; i++)
 		{
-			abgeschätzteArtikel[i] = grobeArtikelAnzahl(artikel[i]);
+			abgeschaetzteArtikel[i] = grobeArtikelAnzahl(artikel[i]);
 		}
 		
 		//Minimum
@@ -95,12 +95,12 @@ public class KassaAuswahl
 		
 		for(int i = 1; i <  artikel.length; i++)
 		{
-			if(abgeschätzteArtikel[i] < min)
+			if(abgeschaetzteArtikel[i] < min)
 			{
-				min = abgeschätzteArtikel[i];
+				min = abgeschaetzteArtikel[i];
 				minIndex = i;
 			}
-			else if(abgeschätzteArtikel[i] == min)
+			else if(abgeschaetzteArtikel[i] == min)
 			{
 				if(meinModel.kassenWarteschlange[minIndex].length() > meinModel.kassenWarteschlange[i].length())
 				{
